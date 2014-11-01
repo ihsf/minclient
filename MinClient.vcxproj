@@ -29,6 +29,7 @@
     <ClInclude Include="Etc1.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="ForceInline.h" />
+    <ClInclude Include="lz4-r123\lz4.h" />
     <ClInclude Include="MinClient.h" />
     <ClInclude Include="NetworkStuff.h" />
     <ClInclude Include="OpenGLES2stuff.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Etc1.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="lz4-r123\lz4.c" />
     <ClCompile Include="MinClient.cpp" />
     <ClCompile Include="NetworkStuff.cpp" />
     <ClCompile Include="OpenGLES2stuff.cpp" />

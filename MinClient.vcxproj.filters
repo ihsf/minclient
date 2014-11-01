@@ -31,6 +31,9 @@
     <ClInclude Include="ProfileLogHandler.h">
       <Filter>profiler</Filter>
     </ClInclude>
+    <ClInclude Include="lz4-r123\lz4.h">
+      <Filter>lz4</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -62,6 +65,9 @@
     <ClCompile Include="Profiler.cpp">
       <Filter>profiler</Filter>
     </ClCompile>
+    <ClCompile Include="lz4-r123\lz4.c">
+      <Filter>lz4</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="etc1">
@@ -72,6 +78,9 @@
     </Filter>
     <Filter Include="profiler">
       <UniqueIdentifier>{97a5c19d-8474-4247-b9e1-5ca554aa75eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lz4">
+      <UniqueIdentifier>{4270c80a-74b5-4e29-80d4-8a11b4c429b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
