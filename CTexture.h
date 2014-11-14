@@ -5,6 +5,10 @@
 #include <iostream>
 #include "ForceInline.h"
 
+#ifdef _MSC_VER
+  #pragma warning(disable: 4996) // '*' was declared deprecated
+#endif
+
 using namespace std;
 
 class CTexture{

@@ -18,9 +18,9 @@ void SDLstuff::init(){
 		cerr << "Failed initializing SDL Video: " << SDL_GetError() << endl;
 		exit(1);
 	} 
-
+  /*
   SDL_DisplayMode mode;
-/*
+
   int defaultdisplay = SDL_GetDisplayMode(0, 0, &mode);
 
   // DANIEL: change development 30 inch dell screen to 1920x1080 so the screen is not fully filled
