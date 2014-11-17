@@ -72,6 +72,7 @@ class OpenGLstuff{
     bool isS3TCSupported();
     bool isETCSupported();
     bool isDXT1Supported();
+    bool isFrontBufferSupported();
 };
 
 

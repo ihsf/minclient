@@ -14,6 +14,7 @@
   #include <GLES2/gl2.h>
   #include <GLES2/gl2ext.h>
   #include <android/log.h>
+//  #include "GlUtils.h"   Galaxy Note 4
 #else
   #include <GL/gl.h>
 #endif
@@ -29,20 +30,6 @@ using namespace std;
 #if defined(_WIN32)
 	#include <glext.h>   // used for GL_BGRA
 #endif
-
-/*
-static const char gVertexShader[] =
-"attribute vec4 vPosition;\n"
-"void main() {\n"
-"  gl_Position = vPosition;\n"
-"}\n";
-
-static const char gFragmentShader[] =
-"precision mediump float;\n"
-"void main() {\n"
-"  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-"}\n";
-*/
 
 static const char gVertexShader[] = 
     "uniform mediump mat4 u_Matrix;\n"
@@ -95,6 +82,11 @@ class OpenGLES2stuff{
     static PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
     static PFNGLUSEPROGRAMPROC glUseProgram;
     static PFNGLDELETEPROGRAMPROC glDeleteProgram;
+#endif
+
+#ifdef ANDROID
+    // Galaxy Note 4
+    // PFN_GVR_FrontBuffer egl_GVR_FrontBuffer;
 #endif
 
     static vector<GLuint> programIDs;

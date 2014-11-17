@@ -63,24 +63,29 @@ void OpenGLES2stuff::init(){
 
 #ifdef ANDROID
   programID = createProgram(gVertexShader, gFragmentShader);
- // if(!programID)
-//    exit(2);
-
   gPositionHandle = glGetAttribLocation(programID, "a_Position");
-//  if(!gPositionHandle)
-//    exit(3);
-
   gTexCoordHandle = glGetAttribLocation(programID, "a_TextureCoordinates");
-//  if(!gTexCoordHandle)
-//    exit(4);
-
   uMatrixLocation = glGetUniformLocation(programID, "u_Matrix");
-//  if(!uMatrixLocation)
-//    exit(5);
-
   uTextureUnitLocation = glGetUniformLocation(programID, "u_TextureUnit");
-//  if(!uTextureUnitLocation)
-//    exit(6);
+
+  // Galaxy Note 4
+  // look for the extension
+/*
+  egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
+  if(egl_GVR_FrontBuffer){
+    void* ret = egl_GVR_FrontBuffer( surface_ );
+    if ( ret )
+    {
+      LOG( "egl_GVR_FrontBuffer succeeded" );
+      gvrFrontbuffer = true;
+    }
+    else
+    {
+      LOG("egl_GVR_FrontBuffer failed");
+      gvrFrontbuffer = false;
+    }
+  }
+*/
 #endif 
 }
 

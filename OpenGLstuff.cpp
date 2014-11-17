@@ -520,6 +520,15 @@ bool OpenGLstuff::isPVRTCSupported(){
   return PVRTCSupported;
 }
 
+bool OpenGLstuff::isFrontBufferSupported(){
+  bool frontBufferSupported = false;
+
+  const GLubyte* pExtensions = glGetString(GL_EXTENSIONS);
+  frontBufferSupported = (strstr((char*)pExtensions, "egl_GVR_FrontBuffer") != NULL);
+
+  return frontBufferSupported;
+}
+
 bool OpenGLstuff::isPVRTC2Supported(){
   bool PVRTC2Supported = false;
 
@@ -564,6 +573,14 @@ void OpenGLstuff::printCompressedTextureAvailability(){
   }
   if(isDXT1Supported()){
     strcat(output, "DXT1 ");
+  }
+
+  Font::glPrint(10, Font::AUTO, output, true);
+
+  if (isFrontBufferSupported()){
+    strcpy(output, "FrontBuffer Rendering supported.");
+  } else {
+    strcpy(output, "No FrontBuffer Rendering support.");
   }
 
   Font::glPrint(10, Font::AUTO, output, true);
