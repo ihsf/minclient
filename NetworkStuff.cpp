@@ -1,4 +1,8 @@
-#include "lz4-r123/lz4.h"
+#ifndef ANDROID
+  #include "lz4-r123/lz4.h"
+#else
+  #include "../lz4-r123/lz4.h"
+#endif
 #include "NetworkStuff.h"
 #include <math.h>
 
