@@ -12,10 +12,10 @@ int Engine::rectSizeY[MAX_SERVERS];
 
 bool Engine::rectMode = false;
 
-int Engine::screenWidthRT = 1280; // will be figured out later in SDLstuff::init 
-int Engine::screenHeightRT = 720;
-int Engine::screenWidthGL = 1280;
-int Engine::screenHeightGL = 720;
+int Engine::screenWidthRT = 1920; // will be figured out later in SDLstuff::init 
+int Engine::screenHeightRT = 1080;
+int Engine::screenWidthGL = 1920;
+int Engine::screenHeightGL = 1080;
 int Engine::serverFrameBuffers = 0; 
 
 int Engine::clicksPerSecond = 0;
@@ -104,27 +104,24 @@ void Engine::init(){
     rectSizeY[i] = rectTopServer[i] - rectBottomServer[i] + 1;    
   }
 
-  // DISABLING RECT MODE FOR NOWWW!!!!!!
-  // DISABLING RECT MODE FOR NOWWW!!!!!!
-  // DISABLING RECT MODE FOR NOWWW!!!!!!
-/*
   if(numServers >= 1){
     // only check server 0
     if(rectSizeX[0] > 0 && rectSizeX[0] < Engine::screenWidthRT && rectSizeY[0] > 0 && rectSizeY[0] < Engine::screenHeightRT){
-//      int remainingPixelsX = rectSizeX[0] % Engine::RENDERTILE_SIZE;
-//      int remainingPixelsY = rectSizeY[0] % Engine::RENDERTILE_SIZE;
+      const int RENDERTILE_SIZE = 4;
+      int remainingPixelsX = rectSizeX[0] % RENDERTILE_SIZE;
+      int remainingPixelsY = rectSizeY[0] % RENDERTILE_SIZE;
 
-//      if(remainingPixelsX == 0 && remainingPixelsY == 0){
+      if(remainingPixelsX == 0 && remainingPixelsY == 0){
         Engine::rectMode = true;
         
         for(int i = 0; i < numServers; i++){
           cout << "Rendering Rect enabled: X (" << Engine::rectLeftServer[i] << " - " << Engine::rectRightServer[i] << ")   Y (" << Engine::rectBottomServer[i] << " - " << Engine::rectTopServer[i] << "). " 
             << rectSizeX[i] << "x" << rectSizeY[i] << endl;
         }
-    //  }
+      }
     }
   }
-*/
+
 	// seed the randomizer
 	srand(currentTime);	
 

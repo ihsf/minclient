@@ -200,9 +200,11 @@ void NetworkStuff::receiveMessageFromRenderServerETC1(){
 }
 
 void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
-  // ToDo: Parallelize with cilk or openmp  - with OpenMP it seems to be getting slower on Android
-//#pragma omp parallel for
-
+  // ToDo: 
+  // ToDo: 
+  // ToDo: Change this to LZ4 compressed content receiving!
+  // ToDo: 
+  // ToDo: 
   char debugString[64];
 
   for(int i = 0; i < Engine::numServers; i++){
