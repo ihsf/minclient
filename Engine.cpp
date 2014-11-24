@@ -106,7 +106,7 @@ void Engine::init(){
 
   if(numServers >= 1){
     // only check server 0
-    if(rectSizeX[0] > 0 && rectSizeX[0] < Engine::screenWidthRT && rectSizeY[0] > 0 && rectSizeY[0] < Engine::screenHeightRT){
+    if(rectSizeX[0] > 0 && rectSizeX[0] < Engine::screenWidthRT && rectSizeY[0] > 0 && rectSizeY[0] <= Engine::screenHeightRT){
       const int RENDERTILE_SIZE = 4;
       int remainingPixelsX = rectSizeX[0] % RENDERTILE_SIZE;
       int remainingPixelsY = rectSizeY[0] % RENDERTILE_SIZE;

@@ -105,9 +105,9 @@ GLuint OpenGLES2stuff::loadShader(GLenum shaderType, const char* source) {
         char* buf = (char*)malloc(infoLength);
         if (buf) {
           glGetShaderInfoLog(shader, infoLength, NULL, buf);
-          printf("Error compiling %i:\n%s\n", shaderType, buf);
+          printf("Error compiling %u:\n%s\n", shaderType, buf);
 #ifdef ANDROID
-          LOGI("Error compiling %i:\n%s\n", shaderType, buf);
+          LOGI("Error compiling %u:\n%s\n", shaderType, buf);
 #endif
           free(buf);
         }

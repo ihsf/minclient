@@ -174,9 +174,9 @@ void NetworkStuff::receiveMessageFromRenderServer(){
 	if(Engine::numServers == 0)
 		return;
 
-  if(Engine::numFramesRendered < framesToWait){
-		return;
-  }
+//  if(Engine::numFramesRendered < framesToWait){
+//		return;
+//  }
 
   if(Engine::numFramesRendered <= 3)
     Font::glPrint(10, Font::AUTO, "Starting to receive message from render server", true);
@@ -200,34 +200,34 @@ void NetworkStuff::receiveMessageFromRenderServerETC1(){
 }
 
 void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
-  // ToDo: 
-  // ToDo: 
   // ToDo: Change this to LZ4 compressed content receiving!
-  // ToDo: 
-  // ToDo: 
   char debugString[64];
 
+  int size = 0;
   for(int i = 0; i < Engine::numServers; i++){
     sprintf(debugString, "Receive TCP server %i", i);
 
     {
     CProfileSample receiveMessage1(debugString);
-    unsigned char* dataPtr = openglstuff->frameBufferPointerRect[i]; 
-    unsigned char* dataPtrTmp = dataPtr;
+    unsigned int numBytesToReceiveTemp = (Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2;
 
-    // ToDo: receiving might be parallelized
-    // ToDo: allows parallel uploading of the texture data
-	  unsigned int numBytesToReceiveTemp = (Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2;
-    
-	  do {
-		  int serverIDthatHasTheFrameRenderedForUs = i;
+    // ToDo: receiving might be parallelized; allows parallel uploading of the texture data
+    SDLNet_TCP_Recv(Engine::socketDescriptor[i], &size, 4);
 
-		  int length = SDLNet_TCP_Recv(Engine::socketDescriptor[serverIDthatHasTheFrameRenderedForUs], dataPtrTmp, numBytesToReceiveTemp);
-		  if(length > 0){
-			  numBytesToReceiveTemp -= length;
-			  dataPtrTmp += length;
-		  }
-	  } while (numBytesToReceiveTemp > 0);	
+    auto cnt = size;
+    auto ptr = lz4Buf;
+
+    do {
+      int length = SDLNet_TCP_Recv(Engine::socketDescriptor[i], ptr, cnt);
+      cnt -= length;
+      ptr += length;
+    } while (cnt > 0);
+
+#ifdef ANDROID
+    LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
+#else 
+    LZ4_decompress_safe(lz4Buf, (char*)openglstuff->rectCopyBuffers[i], size, numBytesToReceiveTemp);
+#endif
     }
 
     sprintf(debugString, "glTexImage server %i", i);
@@ -243,27 +243,19 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
     }
 #else
     if(!Engine::serverUseDXT1){
-      // OPTIMIZE: store copy buffers somewhere else
-      unsigned char* copyBuffer = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * 4) / 8];
-      memcpy(copyBuffer, openglstuff->frameBufferPointerRect[i], (Engine::rectSizeX[i] * Engine::rectSizeY[i] * 4) / 8);
-
-      Etc1::convertETC1toRGBA(copyBuffer, openglstuff->frameBufferPointerRect[i], Engine::rectSizeX[i], Engine::rectSizeY[i]);
-
+      Etc1::convertETC1toRGBA(openglstuff->rectCopyBuffers[i], openglstuff->frameBufferPointerRect[i], Engine::rectSizeX[i], Engine::rectSizeY[i]);
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::rectSizeX[i], Engine::rectSizeY[i], 0, GL_BGRA, GL_UNSIGNED_BYTE, openglstuff->frameBufferPointerRect[i]);  
-      delete[] copyBuffer;
     } else {
       openglstuff->glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::rectSizeX[i], Engine::rectSizeY[i], 0,	(Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2, openglstuff->frameBufferPointerRect[i]);  
     }
 #endif
     }
 
-    // does this help? 
-    // glFlush();
+    // glFlush();       // does this help? 
   }
 }
 
 void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
-  // HACK only one server
   int size;
   SDLNet_TCP_Recv( Engine::socketDescriptor[0], &size, 4 );
 

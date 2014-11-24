@@ -15,6 +15,7 @@ OpenGLstuff::OpenGLstuff(SDL_Window* mainWindow_){
   for(int i = 0; i < MAX_SERVERS; i++){
     frameBufferPointerRect[i] = NULL;
     framebufferTexIDRect[i] = 0;
+    rectCopyBuffers[i] = NULL;
   }
 
 #ifdef _WIN32
@@ -63,6 +64,9 @@ void OpenGLstuff::init(){
         // everyone else decompresses into RGBA and needs the full frame buffer
         frameBufferPointerRect[i] = new unsigned char[Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel];
         memset(frameBufferPointerRect[i], 0, Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel);
+
+        rectCopyBuffers[i] = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8];
+        memset(rectCopyBuffers[i], 0, (Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8);
 #endif
       }
     }
@@ -197,8 +201,7 @@ void OpenGLstuff::render(){
   }
 }
 
-// Optimize: Could preallocate vertices[MAX_SERVERS] and render all things while the client
-// state is enabled
+// Optimize: Could preallocate vertices[MAX_SERVERS] and render all things while the client state is enabled
 void OpenGLstuff::drawFrameBufferRect(){
 #ifndef ANDROID
   glMatrixMode(GL_PROJECTION);									       

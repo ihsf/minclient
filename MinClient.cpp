@@ -65,7 +65,7 @@ void doGameLoop(SDLstuff* sdlstuff, Camera* camera, OpenGLstuff* openglstuff, Ne
     }
 
 	  // only display frame after you got one
-	  int framesToWait = Engine::numServers * Engine::serverFrameBuffers;
+    int framesToWait = 0;// Engine::numServers * Engine::serverFrameBuffers;
 
 	  if(Engine::numFramesRendered >= framesToWait){
 #ifdef NETWORK_ON

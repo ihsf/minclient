@@ -47,6 +47,8 @@ class OpenGLstuff{
     unsigned char *frameBufferPointerRect[MAX_SERVERS];
     unsigned int framebufferTexIDRect[MAX_SERVERS];  
 
+    unsigned char *rectCopyBuffers[MAX_SERVERS];
+
 #if defined(_WIN32) 
 		PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D;
     PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glCompressedTexSubImage2D;
