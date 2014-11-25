@@ -261,7 +261,7 @@ void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
   int size;
   SDLNet_TCP_Recv( Engine::socketDescriptor[0], &size, 4 );
 
-  auto cnt = size;
+  auto cnt = abs(size);
   auto ptr = lz4Buf;
 
 	do {
@@ -272,7 +272,14 @@ void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
     ptr += length;
 	} while (cnt > 0);	
 
-  LZ4_decompress_safe( lz4Buf, (char*)openglstuff->frameBufferPointer, size, numBytesToReceive );
+  if( size < 0 )
+  {
+    memcpy( openglstuff->frameBufferPointer, lz4Buf, -size );
+  }
+  else
+  {
+    LZ4_decompress_safe( lz4Buf, (char*)openglstuff->frameBufferPointer, size, numBytesToReceive );
+  }
 }
 
 void NetworkStuff::determineNumBytesToReceive(){
