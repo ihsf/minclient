@@ -234,12 +234,14 @@ void OpenGLstuff::drawFrameBufferRect(){
     int startX = Engine::rectLeftServer[i];
     int startY = Engine::rectBottomServer[i];
 
-    GLfloat vertices[]  = {startX + horizontalOffset,                               startY + (float)Engine::rectSizeY[i] + verticalOffset,  
-                           startX + (float)Engine::rectSizeX[i] + horizontalOffset, startY + (float)Engine::rectSizeY[i] + verticalOffset,
-                           startX + (float)Engine::rectSizeX[i] + horizontalOffset, startY + 0.0f + verticalOffset,
-                           startX + (float)Engine::rectSizeX[i] + horizontalOffset, startY + 0.0f + verticalOffset,
-                           startX + horizontalOffset,                               startY + 0.0f + verticalOffset,  
-                           startX + horizontalOffset,                               startY + (float)Engine::rectSizeY[i] + verticalOffset };
+    GLfloat vertices[] = { 
+      (float)(startX + horizontalOffset), (float)(startY + (float)Engine::rectSizeY[i] + verticalOffset),
+      (float)(startX + (float)Engine::rectSizeX[i] + horizontalOffset), (float)(startY + (float)Engine::rectSizeY[i] + verticalOffset),
+      (float)(startX + (float)Engine::rectSizeX[i] + horizontalOffset), (float)(startY + 0.0f + verticalOffset),
+      (float)(startX + (float)Engine::rectSizeX[i] + horizontalOffset), (float)(startY + 0.0f + verticalOffset),
+      (float)(startX + horizontalOffset), (float)(startY + 0.0f + verticalOffset),
+      (float)(startX + horizontalOffset), (float)(startY + (float)Engine::rectSizeY[i] + verticalOffset) 
+    };
 /*
     if(Engine::upscale){      
       float zoomRatio;
