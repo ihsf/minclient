@@ -583,12 +583,23 @@ void OpenGLstuff::printCompressedTextureAvailability(){
   Font::glPrint(10, Font::AUTO, output, true);
 
   if (isFrontBufferSupported()){
-    strcpy(output, "FrontBuffer Rendering supported.");
+    strcpy(output, "FrontBuffer EXT supported.");
   } else {
-    strcpy(output, "No FrontBuffer Rendering support.");
+    strcpy(output, "No FrontBuffer EXT support.");
   }
 
   Font::glPrint(10, Font::AUTO, output, true);
+
+  bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
+  if(frontBufferCreated){
+    strcpy(output, "egl_GVR_FB adr succeeded.");
+  } else {
+    strcpy(output, "egl_GVR_FB adr failed.");
+  }
+
+  Font::glPrint(10, Font::AUTO, output, true);
+
+  SDL_Delay(3000);
 
   if(Engine::serverUseETC1){
     if(!isETCSupported()){

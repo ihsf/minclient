@@ -4,6 +4,7 @@
   #include <android/log.h>
   #define  LOG_TAG    "org.ivci.qwrt"
   #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+  void* OpenGLES2stuff::egl_GVR_FrontBuffer = NULL;
 #endif
 
 unsigned int OpenGLES2stuff::programID = 0;
@@ -13,6 +14,7 @@ int OpenGLES2stuff::uMatrixLocation = 0;
 int OpenGLES2stuff::uTextureUnitLocation = 0;
 vector<GLuint> OpenGLES2stuff::programIDs;
 vector<GLuint> OpenGLES2stuff::shaderIDs;
+
 
 #if defined(_WIN32) 
 PFNGLCREATESHADERPROC OpenGLES2stuff::glCreateShader = NULL;
@@ -67,27 +69,36 @@ void OpenGLES2stuff::init(){
   gTexCoordHandle = glGetAttribLocation(programID, "a_TextureCoordinates");
   uMatrixLocation = glGetUniformLocation(programID, "u_Matrix");
   uTextureUnitLocation = glGetUniformLocation(programID, "u_TextureUnit");
-
-  // Galaxy Note 4
-  // look for the extension
-/*
-  egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
-  if(egl_GVR_FrontBuffer){
-    void* ret = egl_GVR_FrontBuffer( surface_ );
-    if ( ret )
-    {
-      LOG( "egl_GVR_FrontBuffer succeeded" );
-      gvrFrontbuffer = true;
-    }
-    else
-    {
-      LOG("egl_GVR_FrontBuffer failed");
-      gvrFrontbuffer = false;
-    }
-  }
-*/
 #endif 
 }
+
+
+
+bool OpenGLES2stuff::setFrontBuffer(/*const EGLSurface surface_*/){
+#ifdef ANDROID
+  // Galaxy Note 4
+  //EGLSurface surface_ = eglGetCurrentSurface( EGL_DRAW );		// swapbuffers will be called on this
+
+  // look for the extension
+  //egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
+  egl_GVR_FrontBuffer = (void*)eglGetProcAddress("egl_GVR_FrontBuffer");
+  if(egl_GVR_FrontBuffer){
+    /*
+    void* ret = egl_GVR_FrontBuffer( surface_ );*/
+    
+    LOGI("egl_GVR_FrontBuffer address succeeded");
+    printf("egl_GVR_FrontBuffer address succeeded\n");    
+    return true;
+  } else {
+    LOGI("egl_GVR_FrontBuffer address failed");
+    printf("egl_GVR_FrontBuffer address failed\n");
+    return false;
+  }
+#endif 
+
+  return false;
+}
+
 
 GLuint OpenGLES2stuff::loadShader(GLenum shaderType, const char* source) {
   GLuint shader = glCreateShader(shaderType);
