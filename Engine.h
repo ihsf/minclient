@@ -170,6 +170,10 @@ class Engine {
 
     static int clicksPerSecond;
 
+    static char debugMessage[64];
+    
+    static bool useGVRFrontBuffer;
+
 	private:		
 		static float lastTime;				// This will hold the time from the last frame		
 		static void parseConfigFile();

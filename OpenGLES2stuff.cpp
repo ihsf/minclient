@@ -4,7 +4,10 @@
   #include <android/log.h>
   #define  LOG_TAG    "org.ivci.qwrt"
   #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-  void* OpenGLES2stuff::egl_GVR_FrontBuffer = NULL;
+  //void* OpenGLES2stuff::egl_GVR_FrontBuffer = NULL;
+  PFN_GVR_FrontBuffer OpenGLES2stuff::egl_GVR_FrontBuffer;
+  EGLSurface OpenGLES2stuff::windowSurface = NULL;
+  EGLDisplay OpenGLES2stuff::display = NULL;
 #endif
 
 unsigned int OpenGLES2stuff::programID = 0;
@@ -74,22 +77,35 @@ void OpenGLES2stuff::init(){
 
 
 
-bool OpenGLES2stuff::setFrontBuffer(/*const EGLSurface surface_*/){
+bool OpenGLES2stuff::setFrontBuffer(){
 #ifdef ANDROID
+  if(!Engine::useGVRFrontBuffer)
+    return false;
+
   // Galaxy Note 4
-  //EGLSurface surface_ = eglGetCurrentSurface( EGL_DRAW );		// swapbuffers will be called on this
+  display = eglGetDisplay( EGL_DEFAULT_DISPLAY );
+  windowSurface = eglGetCurrentSurface( EGL_DRAW );		// swapbuffers will be called on this
 
   // look for the extension
-  //egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
-  egl_GVR_FrontBuffer = (void*)eglGetProcAddress("egl_GVR_FrontBuffer");
+  egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
+  //egl_GVR_FrontBuffer = (void*)eglGetProcAddress("egl_GVR_FrontBuffer");
   if(egl_GVR_FrontBuffer){
-    /*
-    void* ret = egl_GVR_FrontBuffer( surface_ );*/
-    
     LOGI("egl_GVR_FrontBuffer address succeeded");
-    printf("egl_GVR_FrontBuffer address succeeded\n");    
+    printf("egl_GVR_FrontBuffer address succeeded\n"); 
+    strcat(Engine::debugMessage, "egl_GVR_FB address succ. ");
+
+    void* ret = egl_GVR_FrontBuffer( windowSurface );
+    if(ret){
+      LOGI("egl_GVR_FrontBuffer call succeeded");
+      printf("egl_GVR_FrontBuffer call succeeded\n");
+      strcat(Engine::debugMessage, "egl_GVR_FB call succ. ");
+    } else {
+      strcat(Engine::debugMessage, "egl_GVR_FB call NOT succ. ");
+    }
+ 
     return true;
   } else {
+    Engine::useGVRFrontBuffer = false;
     LOGI("egl_GVR_FrontBuffer address failed");
     printf("egl_GVR_FrontBuffer address failed\n");
     return false;
@@ -97,6 +113,12 @@ bool OpenGLES2stuff::setFrontBuffer(/*const EGLSurface surface_*/){
 #endif 
 
   return false;
+}
+
+void OpenGLES2stuff::swapBuffer(){
+#ifdef ANDROID
+  eglSwapBuffers(display, windowSurface);	// swap buffer will operate que/deque related process internally
+#endif
 }
 
 

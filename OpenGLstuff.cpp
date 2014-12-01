@@ -474,7 +474,15 @@ void OpenGLstuff::drawHUD(){
 }
 
 void OpenGLstuff::swapBuffers(){
-	SDL_GL_SwapWindow(mainWindow); 
+#ifdef ANDROID
+  if(!Engine::useGVRFrontBuffer){
+    SDL_GL_SwapWindow(mainWindow); 
+  } else {
+    OpenGLES2stuff::swapBuffer();
+  }
+#else
+  SDL_GL_SwapWindow(mainWindow);
+#endif
 }
 
 void OpenGLstuff::drawFPS(){
@@ -486,6 +494,10 @@ void OpenGLstuff::drawFPS(){
     widthToPrint = width - width/5;
 
   Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
+
+  if(Engine::debugMessage[0] != 0){
+    Font::glPrint(10, height - (2 * height) / 24, Engine::debugMessage, 0);
+  }
 }
 
 bool OpenGLstuff::isETCSupported(){

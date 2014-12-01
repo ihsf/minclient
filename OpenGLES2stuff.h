@@ -17,7 +17,7 @@
   #include <EGL/eglext.h>
   #include <android/log.h>
 //  #include "GlUtils.h"   Galaxy Note 4
-//typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
+  typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
 #else
   #include <GL/gl.h>
 #endif
@@ -27,6 +27,7 @@
 #include <malloc.h>
 #include <vector>
 #include <SDL.h>
+#include "Engine.h"
 
 using namespace std;
 
@@ -68,6 +69,7 @@ class OpenGLES2stuff{
     static int uTextureUnitLocation;
 
     static bool setFrontBuffer();
+    static void swapBuffer();
 
   private:
     static GLuint loadShader(GLenum shaderType, const char* pSource);  
@@ -91,8 +93,10 @@ class OpenGLES2stuff{
 
 #ifdef ANDROID
     // Galaxy Note 4
-    //static PFN_GVR_FrontBuffer egl_GVR_FrontBuffer;
-    static void* egl_GVR_FrontBuffer;
+    static PFN_GVR_FrontBuffer egl_GVR_FrontBuffer;
+    static EGLDisplay	display;
+    static EGLSurface windowSurface;
+    //static void* egl_GVR_FrontBuffer;
 #endif
 
     static vector<GLuint> programIDs;

@@ -12,10 +12,10 @@ int Engine::rectSizeY[MAX_SERVERS];
 
 bool Engine::rectMode = false;
 
-int Engine::screenWidthRT = 1920; // will be figured out later in SDLstuff::init 
-int Engine::screenHeightRT = 1080;
-int Engine::screenWidthGL = 1920;
-int Engine::screenHeightGL = 1080;
+int Engine::screenWidthRT = 2560; // will be figured out later in SDLstuff::init 
+int Engine::screenHeightRT = 1440;
+int Engine::screenWidthGL = 2560;
+int Engine::screenHeightGL = 1440;
 int Engine::serverFrameBuffers = 0; 
 
 int Engine::clicksPerSecond = 0;
@@ -34,6 +34,8 @@ bool Engine::crouchKey = false;
 
 bool Engine::nextFrameStartProfiler = false;   // true to enable profiling and printing the results
 bool Engine::nextFrameStopProfiler = false;
+
+bool Engine::useGVRFrontBuffer = true;
 
 vector<char*> Engine::profilerOutput;
 
@@ -79,6 +81,8 @@ CVector2 Engine::buttonCenter;
 
 CVector2 Engine::buttonPressed;
 
+char Engine::debugMessage[64];
+
 void Engine::init(){
 	for(int i = 0; i < MAX_SERVERS; i++){
 		serverName[i] = NULL;
@@ -93,6 +97,8 @@ void Engine::init(){
 	}
 
   sprintf(strFrameRate, "0fps");
+
+  debugMessage[0] = 0;
 
 	parseConfigFile();	
 
