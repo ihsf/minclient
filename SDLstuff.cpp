@@ -1,5 +1,5 @@
 #include "SDLstuff.h"
-#include "SDL_syswm.h"
+#include <SDL_syswm.h>
 
 SDLstuff::SDLstuff(){	
 	mainWindow = NULL;
