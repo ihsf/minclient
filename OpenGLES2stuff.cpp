@@ -19,27 +19,10 @@ vector<GLuint> OpenGLES2stuff::programIDs;
 vector<GLuint> OpenGLES2stuff::shaderIDs;
 
 
-#ifdef _WIN32
-PFNGLCREATESHADERPROC OpenGLES2stuff::glCreateShader = NULL;
-PFNGLDELETESHADERPROC  OpenGLES2stuff::glDeleteShader = NULL;
-PFNGLSHADERSOURCEARBPROC OpenGLES2stuff::glShaderSource = NULL;
-PFNGLCOMPILESHADERARBPROC OpenGLES2stuff::glCompileShader = NULL;
-PFNGLGETSHADERIVPROC OpenGLES2stuff::glGetShaderiv = NULL;
-PFNGLGETSHADERINFOLOGPROC OpenGLES2stuff::glGetShaderInfoLog = NULL;
-PFNGLCREATEPROGRAMPROC OpenGLES2stuff::glCreateProgram = NULL;
-PFNGLATTACHSHADERPROC OpenGLES2stuff::glAttachShader = NULL;
-PFNGLLINKPROGRAMPROC OpenGLES2stuff::glLinkProgram = NULL;
-PFNGLGETPROGRAMIVPROC OpenGLES2stuff::glGetProgramiv = NULL;
-PFNGLGETPROGRAMINFOLOGPROC OpenGLES2stuff::glGetProgramInfoLog = NULL;
-PFNGLUSEPROGRAMPROC OpenGLES2stuff::glUseProgram = NULL;
-PFNGLDELETEPROGRAMPROC OpenGLES2stuff::glDeleteProgram = NULL;
-#endif
-
-
 OpenGLES2stuff::~OpenGLES2stuff(){
   for (int i = 0; i < (int)shaderIDs.size(); i++){
     glDeleteShader(shaderIDs[i]);
-  }  
+  }
 
   for (int i = 0; i < (int)programIDs.size(); i++){
     glDeleteProgram(programIDs[i]);
@@ -49,30 +32,18 @@ OpenGLES2stuff::~OpenGLES2stuff(){
 
 
 void OpenGLES2stuff::init(){
-#ifdef _WIN32
-  // for loading vertex and fragment shaders
-  glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
-  glDeleteShader = (PFNGLDELETESHADERPROC)wglGetProcAddress("glDeleteShader");
-  glShaderSource = (PFNGLSHADERSOURCEARBPROC)wglGetProcAddress("glShaderSource"); 
-  glCompileShader = (PFNGLCOMPILESHADERARBPROC)wglGetProcAddress("glCompileShader");
-  glGetShaderiv = (PFNGLGETSHADERIVPROC)wglGetProcAddress("glGetShaderiv");
-  glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)wglGetProcAddress("glGetShaderInfoLog");
-  glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
-  glAttachShader = (PFNGLATTACHSHADERPROC)wglGetProcAddress("glAttachShader");
-  glLinkProgram = (PFNGLLINKPROGRAMPROC)wglGetProcAddress("glLinkProgram");
-  glGetProgramiv = (PFNGLGETPROGRAMIVPROC)wglGetProcAddress("glGetProgramiv");
-  glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)wglGetProcAddress("glGetProgramInfoLog");
-  glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
-  glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
-#endif
-
+  GLenum err = glewInit();
+  if (err != GLEW_OK) {
+      cerr << "GLEW init failed!" << std::endl;
+      exit(EXIT_FAILURE);
+  }
 #ifdef ANDROID
   programID = createProgram(gVertexShader, gFragmentShader);
   gPositionHandle = glGetAttribLocation(programID, "a_Position");
   gTexCoordHandle = glGetAttribLocation(programID, "a_TextureCoordinates");
   uMatrixLocation = glGetUniformLocation(programID, "u_Matrix");
   uTextureUnitLocation = glGetUniformLocation(programID, "u_TextureUnit");
-#endif 
+#endif
 }
 
 
@@ -110,7 +81,7 @@ bool OpenGLES2stuff::setFrontBuffer(){
     printf("egl_GVR_FrontBuffer address failed\n");
     return false;
   }
-#endif 
+#endif
 
   return false;
 }

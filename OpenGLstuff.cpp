@@ -1,6 +1,6 @@
 #include "OpenGLstuff.h"
 
-// GL_OES_compressed_ETC1_RGB8_texture 
+// GL_OES_compressed_ETC1_RGB8_texture
 #ifndef GL_ETC1_RGB8_OES
   #define GL_ETC1_RGB8_OES                                        0x8D64
 #endif
@@ -18,7 +18,7 @@ OpenGLstuff::OpenGLstuff(SDL_Window* mainWindow_){
     rectCopyBuffers[i] = NULL;
   }
 
-#ifdef _WIN32
+#ifndef ANDROID
   glCompressedTexImage2D = NULL;
   glCompressedTexSubImage2D = NULL;
 #endif
@@ -30,12 +30,13 @@ OpenGLstuff::~OpenGLstuff(){
 }
 
 void OpenGLstuff::init(){
-#ifdef _WIN32
-  glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)wglGetProcAddress("glCompressedTexImage2DARB");
-	glCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)wglGetProcAddress("glCompressedTexSubImage2DARB");
-#endif 
+  GLenum err = glewInit();
+  if (err != GLEW_OK) {
+      cerr << "GLEW init failed!" << std::endl;
+      exit(EXIT_FAILURE);
+  }
 
-	int numBytesPerPixel = 4;
+  int numBytesPerPixel = 4;
 
   if(!Engine::rectMode){
     if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
@@ -75,8 +76,8 @@ void OpenGLstuff::init(){
 	glViewport(0, 0, Engine::screenWidthGL, Engine::screenHeightGL);
 
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
 #endif
 
   float orthoMatrix[16];
@@ -86,8 +87,8 @@ void OpenGLstuff::init(){
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 #endif
   glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -204,10 +205,10 @@ void OpenGLstuff::render(){
 // Optimize: Could preallocate vertices[MAX_SERVERS] and render all things while the client state is enabled
 void OpenGLstuff::drawFrameBufferRect(){
 #ifndef ANDROID
-  glMatrixMode(GL_PROJECTION);									       
-  glPushMatrix();													             
-  glLoadIdentity();												             
-#endif  
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+#endif
 
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -216,9 +217,9 @@ void OpenGLstuff::drawFrameBufferRect(){
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
 
-  glMatrixMode(GL_MODELVIEW);										       
-  glPushMatrix();													             
-  glLoadIdentity();												             
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 #endif
 
   int horizontalOffset = (Engine::screenWidthGL  - Engine::screenWidthRT)  / 2;
@@ -278,16 +279,16 @@ void OpenGLstuff::drawFrameBufferRect(){
 */
 
 #ifndef ANDROID
-	  glEnableClientState(GL_VERTEX_ARRAY);
-	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-   
-	  glVertexPointer(2, GL_FLOAT, 0,vertices);
-	  glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-   
-	  glDrawArrays(GL_TRIANGLES,0,6);  
- 
-	  glDisableClientState(GL_VERTEX_ARRAY);
-	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 0,vertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+
+    glDrawArrays(GL_TRIANGLES,0,6);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #else
     glUseProgram(OpenGLES2stuff::programID);
 
@@ -301,24 +302,24 @@ void OpenGLstuff::drawFrameBufferRect(){
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(OpenGLES2stuff::uTextureUnitLocation, 0);
-   
-	  glDrawArrays(GL_TRIANGLES,0,6);  
+
+    glDrawArrays(GL_TRIANGLES,0,6);
 #endif
   }
 
 #ifndef ANDROID
-  glPopMatrix();	               
-  glMatrixMode(GL_PROJECTION);									      
-  glPopMatrix();								
+  glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
 #endif
 }
 
 void OpenGLstuff::drawFrameBufferNoRect(){
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);									       
-	glPushMatrix();													              
-	glLoadIdentity();												              
- #endif  
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+ #endif
 
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -326,9 +327,9 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
-  glMatrixMode(GL_MODELVIEW);										        
-	glPushMatrix();													              
-	glLoadIdentity();												            
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 #endif
 
   int horizontalOffset = (Engine::screenWidthGL  - Engine::screenWidthRT)  / 2;
@@ -338,7 +339,7 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 	glBindTexture(GL_TEXTURE_2D, framebufferTexID);
 #ifdef ANDROID
   if(!Engine::serverUseETC1){
-	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, frameBufferPointer);  
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, frameBufferPointer);
   } else {
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);  
   }
@@ -353,10 +354,10 @@ void OpenGLstuff::drawFrameBufferNoRect(){
     delete[] copyBuffer;
   } else {
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer); 
-		//glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Engine::screenWidthRT, Engine::screenHeightRT, COMPRESSED_RGBA_S3TC_DXT1_EXT,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer); 
+    //glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Engine::screenWidthRT, Engine::screenHeightRT, COMPRESSED_RGBA_S3TC_DXT1_EXT,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);
   }
 #endif
-  
+
   GLfloat vertices[]  = {0.0f + horizontalOffset,                  (float)Engine::screenHeightRT + verticalOffset,  
                   (float)Engine::screenWidthRT + horizontalOffset, (float)Engine::screenHeightRT + verticalOffset,
                   (float)Engine::screenWidthRT + horizontalOffset, 0.0f + verticalOffset,
@@ -401,16 +402,16 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   GLfloat texCoords[] = {0.0f,1.0f,  1.0f,1.0f,  1.0f,0.0f,   1.0f,0.0f,   0.0f,0.0f,  0.0f,1.0f};
 
 #ifndef ANDROID
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
- 
-	glVertexPointer(2, GL_FLOAT, 0,vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
- 
-	glDrawArrays(GL_TRIANGLES,0,6);  
- 
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+  glVertexPointer(2, GL_FLOAT, 0,vertices);
+  glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+
+  glDrawArrays(GL_TRIANGLES,0,6);
+
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #else
   glUseProgram(OpenGLES2stuff::programID);
 
@@ -429,9 +430,9 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 #endif
 
 #ifndef ANDROID
-  glPopMatrix();	               
-	glMatrixMode(GL_PROJECTION);									      
-	glPopMatrix();								  
+  glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
 #endif
 }
 

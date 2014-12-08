@@ -1,5 +1,16 @@
 #include "CTextureGL.h"
 
+#ifdef ANDROID
+//  #include <GLES/gl.h>
+  #include <GLES2/gl2.h>
+  #include <GLES2/gl2ext.h>
+  #include <android/log.h>
+#else
+  #include <GL/glew.h>
+  #include <GL/glext.h>   // used for GL_BGRA
+  #include <GL/gl.h>
+#endif
+
 CTextureGL::CTextureGL(){
 	init();
 }

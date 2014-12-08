@@ -3,29 +3,12 @@
 
 // This code and the font texture is based on one of the tutorials of NeHe productions (Jeff Molofee). http://nehe.gamedev.net/.
 
-#ifdef _WIN32
-	#include <windows.h>		
-#endif
-#include <math.h>		
-#include <stdio.h>	
-
-#ifdef __APPLE__
-	#include <glut.h>
-	#include <GL/glext.h>
-#endif
-
-#ifdef ANDROID
-//  #include <GLES/gl.h>
-  #include <GLES2/gl2.h>
-  #include <GLES2/gl2ext.h>
-  #include <android/log.h>
-#else
-  #include <GL/gl.h>
-#endif
-
 #include "CTextureGL.h"
 #include "Engine.h"
 #include "OpenGLES2stuff.h"
+
+#include <math.h>
+#include <stdio.h>
 
 const int FONT_MAX_NUMBER_LINES = 64;
 const int FONT_MAX_LENGTH_PER_LINE = 64;

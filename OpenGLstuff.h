@@ -3,29 +3,11 @@
 
 #define GL_GLEXT_PROTOTYPES
 
-#ifdef _WIN32
-	#include <windows.h>
-#endif
-
-#ifdef ANDROID
-//  #include <GLES/gl.h>
-  #include <GLES2/gl2.h>
-  #include <GLES2/gl2ext.h>
-  #include <android/log.h>
-#else
-  #include <GL/gl.h>
-#endif
-
-#include <SDL.h>					
 #include "Engine.h"
 #include "Font.h"
 #include "Profiler.h"
 #include "Etc1.h"
 #include "OpenGLES2stuff.h"
-
-#ifdef _WIN32
-	#include <glext.h>   // used for GL_BGRA
-#endif
 
 #ifndef COMPRESSED_RGBA_S3TC_DXT1_EXT
 	#define COMPRESSED_RGBA_S3TC_DXT1_EXT 0x83F1
@@ -49,7 +31,7 @@ class OpenGLstuff{
 
     unsigned char *rectCopyBuffers[MAX_SERVERS];
 
-#ifdef _WIN32
+#ifndef ANDROID
     PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D;
     PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glCompressedTexSubImage2D;
 #endif
@@ -76,6 +58,5 @@ class OpenGLstuff{
     bool isDXT1Supported();
     bool isFrontBufferSupported();
 };
-
 
 #endif

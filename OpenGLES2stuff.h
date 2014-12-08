@@ -19,21 +19,21 @@
 //  #include "GlUtils.h"   Galaxy Note 4
   typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
 #else
+  #include <GL/glew.h>
+  #include <GL/glext.h>   // used for GL_BGRA
   #include <GL/gl.h>
 #endif
+
+#include "Engine.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <vector>
+
 #include <SDL.h>
-#include "Engine.h"
 
 using namespace std;
-
-#ifdef _WIN32
-	#include <glext.h>   // used for GL_BGRA
-#endif
 
 static const char gVertexShader[] = 
     "uniform mediump mat4 u_Matrix;\n"
@@ -75,22 +75,6 @@ class OpenGLES2stuff{
     static GLuint loadShader(GLenum shaderType, const char* pSource);  
     static GLuint createProgram(const char* pVertexSource, const char* pFragmentSource);
 
-#ifdef _WIN32
-    static PFNGLCREATESHADERPROC glCreateShader;
-    static PFNGLDELETESHADERPROC  glDeleteShader;
-    static PFNGLSHADERSOURCEARBPROC glShaderSource; 
-    static PFNGLCOMPILESHADERARBPROC glCompileShader;
-    static PFNGLGETSHADERIVPROC glGetShaderiv;
-    static PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-    static PFNGLCREATEPROGRAMPROC glCreateProgram;
-    static PFNGLATTACHSHADERPROC glAttachShader;
-    static PFNGLLINKPROGRAMPROC glLinkProgram;
-    static PFNGLGETPROGRAMIVPROC glGetProgramiv;
-    static PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-    static PFNGLUSEPROGRAMPROC glUseProgram;
-    static PFNGLDELETEPROGRAMPROC glDeleteProgram;
-#endif
-
 #ifdef ANDROID
     // Galaxy Note 4
     static PFN_GVR_FrontBuffer egl_GVR_FrontBuffer;
@@ -102,6 +86,5 @@ class OpenGLES2stuff{
     static vector<GLuint> programIDs;
     static vector<GLuint> shaderIDs;
 };
-
 
 #endif
