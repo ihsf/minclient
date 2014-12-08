@@ -43,12 +43,12 @@ void NetworkStuff::init() {
  
   char output[256];
   sprintf(output, "Network protocol version: %i", NETWORK_PROTOCOL_VERSION);
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
   cout << "Network protocol version: " << NETWORK_PROTOCOL_VERSION << endl;
 
 	for(int i = 0; i < Engine::numServers; i++){
     sprintf(output, "Trying to resolve host %s", Engine::serverName[i]);
-    Font::glPrint(10, Font::AUTO, output, true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 		cout << "Trying to resolve host " << Engine::serverName[i] << endl;
 
 		int result = 0;
@@ -57,10 +57,10 @@ void NetworkStuff::init() {
 			result = SDLNet_ResolveHost(&Engine::serverIP[i], Engine::serverName[i], Engine::serverPort[i]);
 		} while (result != 0);
     sprintf(output, "Result ResolveHost %i", result);
-    Font::glPrint(10, Font::AUTO, output, true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
     sprintf(output, "Trying to open socket for server %i", i);
-    Font::glPrint(10, Font::AUTO, output, true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 		cout << "Trying to open socket for server " << i << endl;
 		do {
       SDL_Delay(5);
@@ -68,7 +68,7 @@ void NetworkStuff::init() {
 		} while (!Engine::socketDescriptor[i]);
 
     sprintf(output, "Done opening socket for server %i at port %i", i, Engine::serverPort[i]);
-    Font::glPrint(10, Font::AUTO, output, true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 		cout << "Done opening socket for server " << i << " at port " << Engine::serverPort[i] << endl;
 	}
 
@@ -109,13 +109,13 @@ void NetworkStuff::sendInitPackets(){
       msgBuffer.rectBottom = Engine::rectBottomServer[i];
 
 			if (SDLNet_TCP_Send(Engine::socketDescriptor[i], (void *)&msgBuffer, sizeof(msgBuffer)) < sizeof(msgBuffer)) {
-        Font::glPrint(10, Font::AUTO, "sendInitPacket - SDLNet_TCP_Send: Error", true);
+        minclient::Font::glPrint(10, minclient::Font::AUTO, "sendInitPacket - SDLNet_TCP_Send: Error", true);
 				cout << "sendInitPacket - SDLNet_TCP_Send: Error" << endl;
 			}
 		}
 	}
 
-  Font::glPrint(10, Font::AUTO, "initPackets sent.", true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, "initPackets sent.", true);
   cout << "initPackets sent." << endl;
 }
 
@@ -149,12 +149,12 @@ void NetworkStuff::sendMessageToRenderServers(){
 	for(int i = 0; i < Engine::numServers; i++){
 		if(Engine::socketDescriptor[i]){
       if(verbose)
-        Font::glPrint(10, Font::AUTO, "Starting to send message to render server", true);
+        minclient::Font::glPrint(10, minclient::Font::AUTO, "Starting to send message to render server", true);
 			if (SDLNet_TCP_Send(Engine::socketDescriptor[i], (void *)&msgBufferSend, sizeof(msgBufferSend)) < sizeof(msgBufferSend)) {
 				cout << "sendMessageToRenderServers - SDLNet_TCP_Send: Error" << endl;
 			}
       if(verbose)
-        Font::glPrint(10, Font::AUTO, "Sent message to render server", true);
+        minclient::Font::glPrint(10, minclient::Font::AUTO, "Sent message to render server", true);
 		}
 	}
 }
@@ -179,12 +179,12 @@ void NetworkStuff::receiveMessageFromRenderServer(){
 //  }
 
   if(Engine::numFramesRendered <= 3)
-    Font::glPrint(10, Font::AUTO, "Starting to receive message from render server", true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, "Starting to receive message from render server", true);
 
   if(Engine::serverUseETC1 || Engine::serverUseDXT1){
     receiveMessageFromRenderServerETC1();
   } else {
-    Font::glPrint(10, Font::AUTO, "Unknown codec from render server", true);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, "Unknown codec from render server", true);
     cout << "Unknown codec from render server" << endl;
     SDL_Delay(1500);
     exit(1);

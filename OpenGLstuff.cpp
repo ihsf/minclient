@@ -192,12 +192,12 @@ void OpenGLstuff::render(){
 
   {
   CProfileSample render5("glPrintSavedLines");
-  Font::glPrintSavedLines();
+  minclient::Font::glPrintSavedLines();
   }
 
   {
   CProfileSample render6("resetSavedLines");
-  Font::resetSavedLines();
+  minclient::Font::resetSavedLines();
   }
 }
 
@@ -436,10 +436,10 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 }
 
 void OpenGLstuff::drawProfilerOutput(){
-  Font::resetNumLinesPrinted();
+  minclient::Font::resetNumLinesPrinted();
 
   for(int i = 0; i < (int)Engine::profilerOutput.size(); i++){
-    Font::glPrint(10, Font::AUTO, Engine::profilerOutput[i], false);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, Engine::profilerOutput[i], false);
     delete [] Engine::profilerOutput[i];
   }
 
@@ -463,14 +463,14 @@ void OpenGLstuff::drawHUD(){
   }
 
   if(Engine::screenWidthGL > 512){
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y + Engine::fontSize, " o ", false);
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y, "ooo", false);
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y - Engine::fontSize, " o ", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y + Engine::fontSize, " o ", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y, "ooo", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y - Engine::fontSize, " o ", false);
   }
 
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
 }
 
 void OpenGLstuff::swapBuffers(){
@@ -493,10 +493,10 @@ void OpenGLstuff::drawFPS(){
   if(width < 512)
     widthToPrint = width - width/5;
 
-  Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
+  minclient::Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
 
   if(Engine::debugMessage[0] != 0){
-    Font::glPrint(10, height - (2 * height) / 24, Engine::debugMessage, 0);
+    minclient::Font::glPrint(10, height - (2 * height) / 24, Engine::debugMessage, 0);
   }
 }
 
@@ -592,7 +592,7 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcat(output, "DXT1 ");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   if (isFrontBufferSupported()){
     strcpy(output, "FrontBuffer EXT supported.");
@@ -600,7 +600,7 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcpy(output, "No FrontBuffer EXT support.");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
   if(frontBufferCreated){
@@ -609,13 +609,13 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcpy(output, "egl_GVR_FB adr failed.");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   SDL_Delay(3000);
 
   if(Engine::serverUseETC1){
     if(!isETCSupported()){
-      Font::glPrint(10, Font::AUTO, "Trying to use ETC1, but not supported in hardware.", true);
+      minclient::Font::glPrint(10, minclient::Font::AUTO, "Trying to use ETC1, but not supported in hardware.", true);
 #ifdef ANDROID      
       //SDL_Delay(2000);
       //exit(1);

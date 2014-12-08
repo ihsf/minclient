@@ -8,7 +8,7 @@ int main(int argc, char *argv[]){
   OpenGLstuff openglstuff(sdlstuff.getMainWindow());	
   OpenGLES2stuff::init();
 
-  Font::init(sdlstuff.getMainWindow());
+  minclient::Font::init(sdlstuff.getMainWindow());
 
   sdlstuff.tweakFontSize();
   sdlstuff.printResolution();

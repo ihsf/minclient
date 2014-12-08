@@ -32,6 +32,7 @@ const int FONT_MAX_LENGTH_PER_LINE = 64;
 const int FONT_MAX_LETTERS_ON_SCREEN = 640;
 
 // this font works using OpenGL quads with textures
+namespace minclient {
 class Font{
 	public:
 		Font();
@@ -65,5 +66,6 @@ class Font{
 
     static float lookUpTableLetters[256][2];
 };
+}
 
 #endif
