@@ -40,6 +40,14 @@ using namespace std;
 	#pragma warning(disable: 589)  //  transfer of control bypasses initialization of
 #endif
 
+#ifdef _WIN32
+  #define _ALIGN(sz) __declspec(align(sz))
+  #define __align(...)           __declspec(align(__VA_ARGS__))
+#else
+  #define _ALIGN(...) __attribute__((aligned(__VA_ARGS__)))
+  #define __align(...) __attribute__((aligned(__VA_ARGS__)))
+#endif
+
 #ifndef PI_DEFINED
 	#define PI_DEFINED
 	const double PI  = 3.1415926535897932384626433832795;
