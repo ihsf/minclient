@@ -19,7 +19,7 @@ vector<GLuint> OpenGLES2stuff::programIDs;
 vector<GLuint> OpenGLES2stuff::shaderIDs;
 
 
-#if defined(_WIN32) 
+#ifdef _WIN32
 PFNGLCREATESHADERPROC OpenGLES2stuff::glCreateShader = NULL;
 PFNGLDELETESHADERPROC  OpenGLES2stuff::glDeleteShader = NULL;
 PFNGLSHADERSOURCEARBPROC OpenGLES2stuff::glShaderSource = NULL;
@@ -49,7 +49,7 @@ OpenGLES2stuff::~OpenGLES2stuff(){
 
 
 void OpenGLES2stuff::init(){
-#if defined(_WIN32) 
+#ifdef _WIN32
   // for loading vertex and fragment shaders
   glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
   glDeleteShader = (PFNGLDELETESHADERPROC)wglGetProcAddress("glDeleteShader");

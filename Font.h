@@ -3,13 +3,13 @@
 
 // This code and the font texture is based on one of the tutorials of NeHe productions (Jeff Molofee). http://nehe.gamedev.net/.
 
-#if defined(_WIN32) 
+#ifdef _WIN32
 	#include <windows.h>		
 #endif
 #include <math.h>		
 #include <stdio.h>	
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 	#include <glut.h>
 	#include <GL/glext.h>
 #endif

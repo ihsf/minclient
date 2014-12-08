@@ -5,7 +5,7 @@
 // license: Apache 2.0, https://developer.android.com/license.html
 #define GL_GLEXT_PROTOTYPES
 
-#if defined(_WIN32) 
+#ifdef _WIN32
 	#include <windows.h>
 #endif
 
@@ -31,7 +31,7 @@
 
 using namespace std;
 
-#if defined(_WIN32)
+#ifdef _WIN32
 	#include <glext.h>   // used for GL_BGRA
 #endif
 
@@ -75,7 +75,7 @@ class OpenGLES2stuff{
     static GLuint loadShader(GLenum shaderType, const char* pSource);  
     static GLuint createProgram(const char* pVertexSource, const char* pFragmentSource);
 
-#if defined(_WIN32) 
+#ifdef _WIN32
     static PFNGLCREATESHADERPROC glCreateShader;
     static PFNGLDELETESHADERPROC  glDeleteShader;
     static PFNGLSHADERSOURCEARBPROC glShaderSource; 

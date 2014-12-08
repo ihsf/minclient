@@ -30,7 +30,7 @@ OpenGLstuff::~OpenGLstuff(){
 }
 
 void OpenGLstuff::init(){
-#if defined(_WIN32) 
+#ifdef _WIN32
   glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)wglGetProcAddress("glCompressedTexImage2DARB");
 	glCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)wglGetProcAddress("glCompressedTexSubImage2DARB");
 #endif 

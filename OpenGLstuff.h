@@ -3,7 +3,7 @@
 
 #define GL_GLEXT_PROTOTYPES
 
-#if defined(_WIN32) 
+#ifdef _WIN32
 	#include <windows.h>
 #endif
 
@@ -23,7 +23,7 @@
 #include "Etc1.h"
 #include "OpenGLES2stuff.h"
 
-#if defined(_WIN32)
+#ifdef _WIN32
 	#include <glext.h>   // used for GL_BGRA
 #endif
 
@@ -49,8 +49,8 @@ class OpenGLstuff{
 
     unsigned char *rectCopyBuffers[MAX_SERVERS];
 
-#if defined(_WIN32) 
-		PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D;
+#ifdef _WIN32
+    PFNGLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D;
     PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC glCompressedTexSubImage2D;
 #endif
 
