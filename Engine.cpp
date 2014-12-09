@@ -12,10 +12,32 @@ int Engine::rectSizeY[MAX_SERVERS];
 
 bool Engine::rectMode = false;
 
-int Engine::screenWidthRT = 2560; // will be figured out later in SDLstuff::init 
-int Engine::screenHeightRT = 1440;
-int Engine::screenWidthGL = 2560;
-int Engine::screenHeightGL = 1440;
+#if 0
+  int Engine::screenWidthRT = 2560;  // needs to be divisable by RENDERTILE_SIZE
+  int Engine::screenHeightRT = 1440;  // needs to be divisable by RENDERTILE_SIZE
+  int Engine::screenWidthGL = 2560;
+  int Engine::screenHeightGL = 1440;
+#else
+  #if 1
+    int Engine::screenWidthRT = 1920;  // needs to be divisable by RENDERTILE_SIZE
+    int Engine::screenHeightRT = 1080;  // needs to be divisable by RENDERTILE_SIZE
+    int Engine::screenWidthGL = 1920;
+    int Engine::screenHeightGL = 1080;
+  #else
+    #if 0
+      int Engine::screenWidthRT = 1280;  // needs to be divisable by RENDERTILE_SIZE
+      int Engine::screenHeightRT = 720;  // needs to be divisable by RENDERTILE_SIZE
+      int Engine::screenWidthGL = 1280;
+      int Engine::screenHeightGL = 720;
+    #else
+      int Engine::screenWidthRT = 240;  // needs to be divisable by RENDERTILE_SIZE
+      int Engine::screenHeightRT = 240;  // needs to be divisable by RENDERTILE_SIZE
+      int Engine::screenWidthGL = 240;
+      int Engine::screenHeightGL = 240;
+    #endif
+  #endif
+#endif
+
 int Engine::serverFrameBuffers = 0; 
 
 int Engine::clicksPerSecond = 0;

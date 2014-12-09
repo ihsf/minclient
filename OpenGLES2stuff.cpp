@@ -108,6 +108,7 @@ bool OpenGLES2stuff::setFrontBuffer(){
     Engine::useGVRFrontBuffer = false;
     LOGI("egl_GVR_FrontBuffer address failed");
     printf("egl_GVR_FrontBuffer address failed\n");
+    strcat(Engine::debugMessage, "egl_GVR_FB address failed. ");
     return false;
   }
 #endif 
