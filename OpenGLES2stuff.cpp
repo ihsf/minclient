@@ -102,6 +102,8 @@ bool OpenGLES2stuff::setFrontBuffer(){
     } else {
       strcat(Engine::debugMessage, "egl_GVR_FB call NOT succ. ");
     }
+
+    glEnable(GL_WRITEONLY_RENDERING_QCOM);
  
     return true;
   } else {

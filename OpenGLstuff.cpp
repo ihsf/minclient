@@ -207,6 +207,8 @@ void OpenGLstuff::drawFrameBufferRect(){
   glMatrixMode(GL_PROJECTION);									       
   glPushMatrix();													             
   glLoadIdentity();												             
+#else
+  glEnable(GL_SCISSOR_TEST);
 #endif  
 
   float orthoMatrix[16];
@@ -233,6 +235,9 @@ void OpenGLstuff::drawFrameBufferRect(){
     
     int startX = Engine::rectLeftServer[i];
     int startY = Engine::rectBottomServer[i];
+#ifdef ANDROID
+    glScissor(startX, startY, Engine::rectSizeX[i], Engine::rectSizeY[i]);
+#endif
 
     GLfloat vertices[] = { 
       (float)(startX + horizontalOffset), (float)(startY + (float)Engine::rectSizeY[i] + verticalOffset),
@@ -309,7 +314,9 @@ void OpenGLstuff::drawFrameBufferRect(){
 #ifndef ANDROID
   glPopMatrix();	               
   glMatrixMode(GL_PROJECTION);									      
-  glPopMatrix();								
+  glPopMatrix();	
+#else
+  glDisable(GL_SCISSOR_TEST);
 #endif
 }
 
@@ -318,8 +325,11 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 	glMatrixMode(GL_PROJECTION);									       
 	glPushMatrix();													              
 	glLoadIdentity();												              
- #endif  
+#else
+  //glEnable(GL_WRITEONLY_RENDERING_QCOM);
+#endif  
 
+  
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
   Engine::calculateOrthoMatrix(0.0f, Engine::screenWidthGL, 0.0f, Engine::screenHeightGL, -1.0f, 1.0f, orthoMatrix);
@@ -425,7 +435,9 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   glActiveTexture(GL_TEXTURE0);
   glUniform1i(OpenGLES2stuff::uTextureUnitLocation, 0);
    
-	glDrawArrays(GL_TRIANGLES,0,6);  
+	glDrawArrays(GL_TRIANGLES,0,6); 
+
+  //glDisable(GL_WRITEONLY_RENDERING_QCOM);
 #endif
 
 #ifndef ANDROID

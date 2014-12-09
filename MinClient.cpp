@@ -27,6 +27,12 @@ int main(int argc, char *argv[]){
 		doGameLoop(&sdlstuff, &camera, &openglstuff, &networkStuff);
 	}
 
+#ifdef ANDROID
+  if(Engine::useGVRFrontBuffer){
+    glDisable(GL_WRITEONLY_RENDERING_QCOM);
+  }
+#endif
+
 	sdlstuff.closeSDL_Net();
 
   sdlstuff.ungrabKeyAndMouse();
