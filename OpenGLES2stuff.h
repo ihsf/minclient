@@ -20,8 +20,13 @@
   typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
 #else
   #include <GL/glew.h>
+#ifdef __APPLE__
+  #include <OpenGL/glext.h>
+  #include <OpenGL/gl.h>
+#else
   #include <GL/glext.h>   // used for GL_BGRA
   #include <GL/gl.h>
+#endif
 #endif
 
 #include "Engine.h"

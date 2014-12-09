@@ -7,8 +7,13 @@
   #include <android/log.h>
 #else
   #include <GL/glew.h>
+#ifdef __APPLE__
+  #include <OpenGL/glext.h>
+  #include <OpenGL/gl.h>
+#else
   #include <GL/glext.h>   // used for GL_BGRA
   #include <GL/gl.h>
+#endif
 #endif
 
 CTextureGL::CTextureGL(){
