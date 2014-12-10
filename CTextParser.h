@@ -1,8 +1,8 @@
 #ifndef _CTEXTPARSER_H
 #define _CTEXTPARSER_H
 
+#include <stdlib.h>
 #include <string.h>
-#include <malloc.h>
 #include <iostream>
 #include <vector>
  

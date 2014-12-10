@@ -1,15 +1,15 @@
 #include "Font.h"
 
-CTextureGL* Font::tex = NULL;
-SDL_Window* Font::mainWindow = NULL;
-int Font::numLinesPrinted = 0;
-char Font::savedLines[FONT_MAX_LENGTH_PER_LINE][FONT_MAX_NUMBER_LINES];
-CVector2 Font::savedLinesCoordinates[FONT_MAX_NUMBER_LINES];
-int Font::savedLinesNumber = 0;
-GLfloat Font::savedVertices[FONT_MAX_LETTERS_ON_SCREEN][12];
-GLfloat Font::savedTexCoords[FONT_MAX_LETTERS_ON_SCREEN][12];
-int Font::savedLetters = 0;
-float Font::lookUpTableLetters[256][2];
+CTextureGL* minclient::Font::tex = NULL;
+SDL_Window* minclient::Font::mainWindow = NULL;
+int minclient::Font::numLinesPrinted = 0;
+char minclient::Font::savedLines[FONT_MAX_LENGTH_PER_LINE][FONT_MAX_NUMBER_LINES];
+CVector2 minclient::Font::savedLinesCoordinates[FONT_MAX_NUMBER_LINES];
+int minclient::Font::savedLinesNumber = 0;
+GLfloat minclient::Font::savedVertices[FONT_MAX_LETTERS_ON_SCREEN][12];
+GLfloat minclient::Font::savedTexCoords[FONT_MAX_LETTERS_ON_SCREEN][12];
+int minclient::Font::savedLetters = 0;
+float minclient::Font::lookUpTableLetters[256][2];
 
 unsigned char texelData[] = {
 0, 0, 
@@ -6568,14 +6568,14 @@ unsigned char texelData[] = {
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-Font::Font(){
+minclient::Font::Font(){
 }
 
-Font::~Font(){
+minclient::Font::~Font(){
 //	delete tex;
 }
 
-void Font::init(SDL_Window* mainWindow_){
+void minclient::Font::init(SDL_Window* mainWindow_){
   mainWindow = mainWindow_;
 	tex = new CTextureGL(texelData, 256, 256, 3);
 
@@ -6585,7 +6585,7 @@ void Font::init(SDL_Window* mainWindow_){
   }
 }
 
-void Font::glPrint(GLint x, GLint y, const char* const string, bool swapBuffer){
+void minclient::Font::glPrint(GLint x, GLint y, const char* const string, bool swapBuffer){
 	if(!string){
 		cout << "glPrint: empty string!" << endl;
 		return;
@@ -6621,15 +6621,15 @@ void Font::glPrint(GLint x, GLint y, const char* const string, bool swapBuffer){
   }
 }
 
-void Font::swapBuffers(){
+void minclient::Font::swapBuffers(){
 	SDL_GL_SwapWindow(mainWindow); 
 }
 
-void Font::resetNumLinesPrinted(){
+void minclient::Font::resetNumLinesPrinted(){
   numLinesPrinted = 1;
 }
 
-void Font::glPrintSavedLines(){
+void minclient::Font::glPrintSavedLines(){
 	//glEnable(GL_BLEND);
 
 	glBindTexture(GL_TEXTURE_2D, tex->getID());						
@@ -6747,7 +6747,7 @@ void Font::glPrintSavedLines(){
 	//glDisable(GL_BLEND);	
 }
 
-void Font::resetSavedLines(){
+void minclient::Font::resetSavedLines(){
   savedLinesNumber = 0;
   for(int i = 0; i < FONT_MAX_NUMBER_LINES; i++){
     savedLines[i][0] = 0;

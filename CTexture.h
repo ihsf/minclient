@@ -1,7 +1,7 @@
 #ifndef CTEXTUREBASE_H
 #define CTEXTUREBASE_H
 
-#include <stdio.h>
+#include <cstring>
 #include <iostream>
 #include "ForceInline.h"
 

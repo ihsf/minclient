@@ -12,7 +12,7 @@ int Engine::rectSizeY[MAX_SERVERS];
 
 bool Engine::rectMode = false;
 
-#if 0
+#if 1
   int Engine::screenWidthRT = 2560;  // needs to be divisable by RENDERTILE_SIZE
   int Engine::screenHeightRT = 1440;  // needs to be divisable by RENDERTILE_SIZE
   int Engine::screenWidthGL = 2560;

@@ -5,10 +5,10 @@
 // THIS FILE WILL BE REMOVED BEFORE RELEASING SOURCE
 // THIS FILE WILL BE REMOVED BEFORE RELEASING SOURCE
 
-#include <math.h>			
-#include <stdio.h>	
+#include <math.h>
+#include <stdio.h>
+
 #include "Engine.h"
-#include <malloc.h>
 #include "rg_etc1.h"
 
 using namespace std;

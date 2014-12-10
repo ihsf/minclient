@@ -2,20 +2,13 @@
 // THIS FILE WILL BE REMOVED BEFORE RELEASING SOURCE
 // THIS FILE WILL BE REMOVED BEFORE RELEASING SOURCE
 
+#include "Engine.h"
 #include "Etc1.h"
 //#include <omp.h> 
 #ifdef __INTEL_COMPILER
   #include <cilk/cilk.h>
 #endif
 
-
-#ifndef ALIGN16
-  #ifndef ANDROID
-    #define   ALIGN16( x ) __declspec(align(16)) x
-  #else
-    #define   ALIGN16( x ) x
-  #endif  
-#endif
 
 #ifndef ByteSwap16
   #define ByteSwap16(n) ( ((((unsigned int) n) << 8) & 0xFF00) | ((((unsigned int) n) >> 8) & 0x00FF) )
@@ -57,7 +50,7 @@ void Etc1::convertETC1toRGBA(unsigned char* compressedData, unsigned char* data,
 void Etc1::etc1helperFunctionDecode(unsigned char* compressedDataPointer, unsigned char* inBuf, int sizeX, int i){
   // every compressed block has 8 bytes
   unsigned char* actualCompressedDataPointer = compressedDataPointer + (i * 8);  
-  ALIGN16( unsigned char block[64] );
+  __align(16) unsigned char block[64];
 
   // decode into temporary block first
   unpack_etc1_block(actualCompressedDataPointer, (unsigned int*)block);
@@ -138,7 +131,7 @@ void Etc1::etc1helperFunction(unsigned char* compressedDataPointer, unsigned cha
   unsigned char*  currentInBuf = inBuf + sizeX * 4 * 4 * (j / 4);
 
   for ( int i = 0; i < sizeX; i += 4) {
-    ALIGN16( unsigned char block[64] );
+    __align(16) unsigned char block[64];
     // copies color values into a block of 4x4 pixels x4 for unsigned char rgba
 	  ExtractBlock( currentInBuf + i * 4, sizeX, block );
 

@@ -1,5 +1,5 @@
 #include "SDLstuff.h"
-#include "SDL_syswm.h"
+#include <SDL_syswm.h>
 
 SDLstuff::SDLstuff(){	
 	mainWindow = NULL;
@@ -82,13 +82,13 @@ void SDLstuff::tweakFontSize(){
 void SDLstuff::printResolution(){
   char output[128];
   sprintf(output, "%ix%i display mode", Engine::screenWidthGL, Engine::screenHeightGL);
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   sprintf(output, "%ix%i render mode (2^n)", Engine::screenWidthRT, Engine::screenHeightRT);
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   sprintf(output, "%ix%i display mode", Engine::screenWidthGL, Engine::screenHeightGL);
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 }
 
 void SDLstuff::checkEvents(){

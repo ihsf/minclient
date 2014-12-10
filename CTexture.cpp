@@ -13,8 +13,7 @@ const char* CTexture::getTextureName(){
 void CTexture::setName(const char* const name){
 	delete [] textureName;
 
-	textureName = new char[strlen(name) + 1];
-	strcpy(textureName, name);
+	textureName = new char[std::strlen(name) + 1];
+    std::strcpy(textureName, name);
 }
-
 

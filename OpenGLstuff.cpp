@@ -1,6 +1,6 @@
 #include "OpenGLstuff.h"
 
-// GL_OES_compressed_ETC1_RGB8_texture 
+// GL_OES_compressed_ETC1_RGB8_texture
 #ifndef GL_ETC1_RGB8_OES
   #define GL_ETC1_RGB8_OES                                        0x8D64
 #endif
@@ -18,7 +18,7 @@ OpenGLstuff::OpenGLstuff(SDL_Window* mainWindow_){
     rectCopyBuffers[i] = NULL;
   }
 
-#ifdef _WIN32
+#ifndef ANDROID
   glCompressedTexImage2D = NULL;
   glCompressedTexSubImage2D = NULL;
 #endif
@@ -30,12 +30,13 @@ OpenGLstuff::~OpenGLstuff(){
 }
 
 void OpenGLstuff::init(){
-#if defined(_WIN32) 
-  glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)wglGetProcAddress("glCompressedTexImage2DARB");
-	glCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC)wglGetProcAddress("glCompressedTexSubImage2DARB");
-#endif 
+  GLenum err = glewInit();
+  if (err != GLEW_OK) {
+      cerr << "GLEW init failed!" << std::endl;
+      exit(EXIT_FAILURE);
+  }
 
-	int numBytesPerPixel = 4;
+  int numBytesPerPixel = 4;
 
   if(!Engine::rectMode){
     if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
@@ -75,8 +76,8 @@ void OpenGLstuff::init(){
 	glViewport(0, 0, Engine::screenWidthGL, Engine::screenHeightGL);
 
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
 #endif
 
   float orthoMatrix[16];
@@ -86,8 +87,8 @@ void OpenGLstuff::init(){
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 #endif
   glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -192,12 +193,12 @@ void OpenGLstuff::render(){
 
   {
   CProfileSample render5("glPrintSavedLines");
-  Font::glPrintSavedLines();
+  minclient::Font::glPrintSavedLines();
   }
 
   {
   CProfileSample render6("resetSavedLines");
-  Font::resetSavedLines();
+  minclient::Font::resetSavedLines();
   }
 }
 
@@ -210,6 +211,10 @@ void OpenGLstuff::drawFrameBufferRect(){
 #else
   glEnable(GL_SCISSOR_TEST);
 #endif  
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+#endif
 
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -218,9 +223,9 @@ void OpenGLstuff::drawFrameBufferRect(){
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
 
-  glMatrixMode(GL_MODELVIEW);										       
-  glPushMatrix();													             
-  glLoadIdentity();												             
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 #endif
 
   int horizontalOffset = (Engine::screenWidthGL  - Engine::screenWidthRT)  / 2;
@@ -283,16 +288,16 @@ void OpenGLstuff::drawFrameBufferRect(){
 */
 
 #ifndef ANDROID
-	  glEnableClientState(GL_VERTEX_ARRAY);
-	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-   
-	  glVertexPointer(2, GL_FLOAT, 0,vertices);
-	  glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-   
-	  glDrawArrays(GL_TRIANGLES,0,6);  
- 
-	  glDisableClientState(GL_VERTEX_ARRAY);
-	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 0,vertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+
+    glDrawArrays(GL_TRIANGLES,0,6);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #else
     glUseProgram(OpenGLES2stuff::programID);
 
@@ -306,15 +311,18 @@ void OpenGLstuff::drawFrameBufferRect(){
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(OpenGLES2stuff::uTextureUnitLocation, 0);
-   
-	  glDrawArrays(GL_TRIANGLES,0,6);  
+
+    glDrawArrays(GL_TRIANGLES,0,6);
 #endif
   }
 
 #ifndef ANDROID
   glPopMatrix();	               
+  glPopMatrix();
   glMatrixMode(GL_PROJECTION);									      
+  glMatrixMode(GL_PROJECTION);
   glPopMatrix();	
+  glPopMatrix();
 #else
   glDisable(GL_SCISSOR_TEST);
 #endif
@@ -329,6 +337,11 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   //glEnable(GL_WRITEONLY_RENDERING_QCOM);
 #endif  
 
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+ #endif
+
   
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -336,9 +349,9 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);
-  glMatrixMode(GL_MODELVIEW);										        
-	glPushMatrix();													              
-	glLoadIdentity();												            
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 #endif
 
   int horizontalOffset = (Engine::screenWidthGL  - Engine::screenWidthRT)  / 2;
@@ -348,7 +361,7 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 	glBindTexture(GL_TEXTURE_2D, framebufferTexID);
 #ifdef ANDROID
   if(!Engine::serverUseETC1){
-	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, frameBufferPointer);  
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, frameBufferPointer);
   } else {
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);  
   }
@@ -363,10 +376,10 @@ void OpenGLstuff::drawFrameBufferNoRect(){
     delete[] copyBuffer;
   } else {
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer); 
-		//glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Engine::screenWidthRT, Engine::screenHeightRT, COMPRESSED_RGBA_S3TC_DXT1_EXT,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer); 
+    //glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Engine::screenWidthRT, Engine::screenHeightRT, COMPRESSED_RGBA_S3TC_DXT1_EXT,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);
   }
 #endif
-  
+
   GLfloat vertices[]  = {0.0f + horizontalOffset,                  (float)Engine::screenHeightRT + verticalOffset,  
                   (float)Engine::screenWidthRT + horizontalOffset, (float)Engine::screenHeightRT + verticalOffset,
                   (float)Engine::screenWidthRT + horizontalOffset, 0.0f + verticalOffset,
@@ -411,16 +424,16 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   GLfloat texCoords[] = {0.0f,1.0f,  1.0f,1.0f,  1.0f,0.0f,   1.0f,0.0f,   0.0f,0.0f,  0.0f,1.0f};
 
 #ifndef ANDROID
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
- 
-	glVertexPointer(2, GL_FLOAT, 0,vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
- 
-	glDrawArrays(GL_TRIANGLES,0,6);  
- 
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+  glVertexPointer(2, GL_FLOAT, 0,vertices);
+  glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+
+  glDrawArrays(GL_TRIANGLES,0,6);
+
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #else
   glUseProgram(OpenGLES2stuff::programID);
 
@@ -441,17 +454,17 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 #endif
 
 #ifndef ANDROID
-  glPopMatrix();	               
-	glMatrixMode(GL_PROJECTION);									      
-	glPopMatrix();								  
+  glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
 #endif
 }
 
 void OpenGLstuff::drawProfilerOutput(){
-  Font::resetNumLinesPrinted();
+  minclient::Font::resetNumLinesPrinted();
 
   for(int i = 0; i < (int)Engine::profilerOutput.size(); i++){
-    Font::glPrint(10, Font::AUTO, Engine::profilerOutput[i], false);
+    minclient::Font::glPrint(10, minclient::Font::AUTO, Engine::profilerOutput[i], false);
     delete [] Engine::profilerOutput[i];
   }
 
@@ -475,14 +488,14 @@ void OpenGLstuff::drawHUD(){
   }
 
   if(Engine::screenWidthGL > 512){
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y + Engine::fontSize, " o ", false);
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y, "ooo", false);
-    Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y - Engine::fontSize, " o ", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y + Engine::fontSize, " o ", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y, "ooo", false);
+    minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y - Engine::fontSize, " o ", false);
   }
 
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
-  //Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
+  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
 }
 
 void OpenGLstuff::swapBuffers(){
@@ -505,10 +518,10 @@ void OpenGLstuff::drawFPS(){
   if(width < 512)
     widthToPrint = width - width/5;
 
-  Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
+  minclient::Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
 
   if(Engine::debugMessage[0] != 0){
-    Font::glPrint(10, height - (2 * height) / 24, Engine::debugMessage, 0);
+    minclient::Font::glPrint(10, height - (2 * height) / 24, Engine::debugMessage, 0);
   }
 }
 
@@ -604,7 +617,7 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcat(output, "DXT1 ");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   if (isFrontBufferSupported()){
     strcpy(output, "FrontBuffer EXT supported.");
@@ -612,7 +625,7 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcpy(output, "No FrontBuffer EXT support.");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
   if(frontBufferCreated){
@@ -621,13 +634,13 @@ void OpenGLstuff::printCompressedTextureAvailability(){
     strcpy(output, "egl_GVR_FB adr failed.");
   }
 
-  Font::glPrint(10, Font::AUTO, output, true);
+  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
   SDL_Delay(3000);
 
   if(Engine::serverUseETC1){
     if(!isETCSupported()){
-      Font::glPrint(10, Font::AUTO, "Trying to use ETC1, but not supported in hardware.", true);
+      minclient::Font::glPrint(10, minclient::Font::AUTO, "Trying to use ETC1, but not supported in hardware.", true);
 #ifdef ANDROID      
       //SDL_Delay(2000);
       //exit(1);
