@@ -32,17 +32,18 @@ OpenGLES2stuff::~OpenGLES2stuff(){
 
 
 void OpenGLES2stuff::init(){
-  GLenum err = glewInit();
-  if (err != GLEW_OK) {
-      cerr << "GLEW init failed!" << std::endl;
-      exit(EXIT_FAILURE);
-  }
 #ifdef ANDROID
   programID = createProgram(gVertexShader, gFragmentShader);
   gPositionHandle = glGetAttribLocation(programID, "a_Position");
   gTexCoordHandle = glGetAttribLocation(programID, "a_TextureCoordinates");
   uMatrixLocation = glGetUniformLocation(programID, "u_Matrix");
   uTextureUnitLocation = glGetUniformLocation(programID, "u_TextureUnit");
+#else
+  GLenum err = glewInit();
+  if (err != GLEW_OK) {
+    cerr << "GLEW init failed!" << std::endl;
+    exit(EXIT_FAILURE);
+}
 #endif
 }
 

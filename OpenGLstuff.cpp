@@ -30,11 +30,13 @@ OpenGLstuff::~OpenGLstuff(){
 }
 
 void OpenGLstuff::init(){
+#ifndef ANDROID
   GLenum err = glewInit();
   if (err != GLEW_OK) {
       cerr << "GLEW init failed!" << std::endl;
       exit(EXIT_FAILURE);
   }
+#endif
 
   int numBytesPerPixel = 4;
 
@@ -211,10 +213,6 @@ void OpenGLstuff::drawFrameBufferRect(){
 #else
   glEnable(GL_SCISSOR_TEST);
 #endif  
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-#endif
 
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -336,12 +334,6 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 #else
   //glEnable(GL_WRITEONLY_RENDERING_QCOM);
 #endif  
-
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
- #endif
-
   
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
