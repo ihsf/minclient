@@ -202,7 +202,8 @@ void Camera::applyKeyboardMovements(){
 		    dotProduct = upVector.dotProduct(&viewMinusPosition);
 	    }
 
-	    CVector3 axis = axis.cross(viewMinusPosition, upVector);
+      CVector3 axis;
+      axis = axis.cross(viewMinusPosition, upVector);
 	    axis.normalize();
 
       rotateView(angleZ, axis.x, axis.y, axis.z);
