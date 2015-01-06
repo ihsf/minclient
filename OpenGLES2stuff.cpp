@@ -2,8 +2,13 @@
 
 #ifdef ANDROID
   #include <android/log.h>
-  #define  LOG_TAG    "org.ivci.qwrt"
-  #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+  #ifndef LOG_TAG
+    #define  LOG_TAG    "org.ivci.qwrt"
+  #endif
+  #ifndef LOGI
+    #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+  #endif
+
   //void* OpenGLES2stuff::egl_GVR_FrontBuffer = NULL;
   PFN_GVR_FrontBuffer OpenGLES2stuff::egl_GVR_FrontBuffer;
   EGLSurface OpenGLES2stuff::windowSurface = NULL;

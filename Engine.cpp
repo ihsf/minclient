@@ -57,7 +57,7 @@ bool Engine::crouchKey = false;
 bool Engine::nextFrameStartProfiler = false;   // true to enable profiling and printing the results
 bool Engine::nextFrameStopProfiler = false;
 
-bool Engine::useGVRFrontBuffer = true;
+bool Engine::useGVRFrontBuffer = false;// true;
 
 vector<char*> Engine::profilerOutput;
 

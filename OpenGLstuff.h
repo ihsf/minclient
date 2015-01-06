@@ -8,6 +8,7 @@
 #include "Profiler.h"
 #include "Etc1.h"
 #include "OpenGLES2stuff.h"
+#include "Sensors.h"
 
 #ifndef COMPRESSED_RGBA_S3TC_DXT1_EXT
 	#define COMPRESSED_RGBA_S3TC_DXT1_EXT 0x83F1

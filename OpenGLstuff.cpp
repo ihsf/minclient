@@ -488,6 +488,19 @@ void OpenGLstuff::drawHUD(){
   //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
   //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
   //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
+
+  // draw accelerometer values
+#ifdef ANDROID
+#if 0
+  float accelX, accelY, accelZ;
+  Sensors::checkSensors(&accelX, &accelY, &accelZ);
+
+  char debugString[64];
+  sprintf(debugString, "%3.2f %3.2f %3.2f", accelX, accelY, accelZ);
+
+  minclient::Font::glPrint(30, 30, debugString, false);
+#endif
+#endif
 }
 
 void OpenGLstuff::swapBuffers(){

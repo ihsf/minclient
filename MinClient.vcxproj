@@ -38,6 +38,7 @@
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="rg_etc1.h" />
     <ClInclude Include="SDLstuff.h" />
+    <ClInclude Include="Sensors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -58,6 +59,7 @@
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="rg_etc1.cpp" />
     <ClCompile Include="SDLstuff.cpp" />
+    <ClCompile Include="Sensors.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{80E4E1B0-C0B9-4202-92F5-11D05B6D5D12}</ProjectGuid>
