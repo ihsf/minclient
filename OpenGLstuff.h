@@ -58,6 +58,8 @@ class OpenGLstuff{
     bool isETCSupported();
     bool isDXT1Supported();
     bool isFrontBufferSupported();
+
+    CVector3 previousSensorAccel;
 };
 
 #endif

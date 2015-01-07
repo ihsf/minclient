@@ -209,6 +209,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <OpenMP>GenerateSequentialCode</OpenMP>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

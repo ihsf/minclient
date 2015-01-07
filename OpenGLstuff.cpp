@@ -492,13 +492,24 @@ void OpenGLstuff::drawHUD(){
   // draw accelerometer values
 #ifdef ANDROID
 #if 0
-  float accelX, accelY, accelZ;
-  Sensors::checkSensors(&accelX, &accelY, &accelZ);
+  CVector3 sensorAccel;
+  Sensors::checkSensors(&sensorAccel.x, &sensorAccel.y, &sensorAccel.z);
 
   char debugString[64];
-  sprintf(debugString, "%3.2f %3.2f %3.2f", accelX, accelY, accelZ);
+  sprintf(debugString, "%3.2f %3.2f %3.2f", sensorAccel.x, sensorAccel.y, sensorAccel.z);
 
   minclient::Font::glPrint(30, 30, debugString, false);
+
+  CVector3 distanceVector = sensorAccel - previousSensorAccel;
+  const float distance = distanceVector.magnitude();
+
+  sprintf(debugString, "dist: %3.2f", distance);
+  minclient::Font::glPrint(30, 52, debugString, false);
+
+  if(distance > 0.05f)
+    minclient::Font::glPrint(175, 52, "!!!!!!!!", false);
+  
+  previousSensorAccel = sensorAccel;  
 #endif
 #endif
 }
@@ -624,24 +635,28 @@ void OpenGLstuff::printCompressedTextureAvailability(){
 
   minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
-  if (isFrontBufferSupported()){
-    strcpy(output, "FrontBuffer EXT supported.");
-  } else {
-    strcpy(output, "No FrontBuffer EXT support.");
+  if (Engine::useGVRFrontBuffer){
+    if (isFrontBufferSupported()){
+      strcpy(output, "FrontBuffer EXT supported.");
+    }
+    else {
+      strcpy(output, "No FrontBuffer EXT support.");
+    }
+
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
+
+    bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
+    if (frontBufferCreated){
+      strcpy(output, "egl_GVR_FB adr succeeded.");
+    }
+    else {
+      strcpy(output, "egl_GVR_FB adr failed.");
+    }
+
+    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
   }
 
-  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
-
-  bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
-  if(frontBufferCreated){
-    strcpy(output, "egl_GVR_FB adr succeeded.");
-  } else {
-    strcpy(output, "egl_GVR_FB adr failed.");
-  }
-
-  minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
-
-  SDL_Delay(3000);
+  SDL_Delay(1000);
 
   if(Engine::serverUseETC1){
     if(!isETCSupported()){
