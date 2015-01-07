@@ -157,6 +157,9 @@ void NetworkStuff::sendMessageToRenderServers(){
         minclient::Font::glPrint(10, minclient::Font::AUTO, "Sent message to render server", true);
 		}
 	}
+
+  // Hijack hack
+  // msgBufferSend.rectBottom = Engine::numAccelerometerHits;
 }
 
 bool NetworkStuff::determineIfThisFrameShouldBeRendered(int i){

@@ -182,6 +182,8 @@ class Engine {
     
     static bool useGVRFrontBuffer;
 
+    static int numAccelerometerHits;
+
 	private:		
 		static float lastTime;				// This will hold the time from the last frame		
 		static void parseConfigFile();

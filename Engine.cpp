@@ -12,6 +12,8 @@ int Engine::rectSizeY[MAX_SERVERS];
 
 bool Engine::rectMode = false;
 
+int Engine::numAccelerometerHits = 0;
+
 #if 1
   int Engine::screenWidthRT = 2560;  // needs to be divisable by RENDERTILE_SIZE
   int Engine::screenHeightRT = 1440;  // needs to be divisable by RENDERTILE_SIZE
@@ -57,7 +59,7 @@ bool Engine::crouchKey = false;
 bool Engine::nextFrameStartProfiler = false;   // true to enable profiling and printing the results
 bool Engine::nextFrameStopProfiler = false;
 
-bool Engine::useGVRFrontBuffer = false;// true;
+bool Engine::useGVRFrontBuffer = true; //false;// 
 
 vector<char*> Engine::profilerOutput;
 
