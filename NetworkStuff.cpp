@@ -203,16 +203,17 @@ void NetworkStuff::receiveMessageFromRenderServerETC1(){
 }
 
 void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
-  // ToDo: Change this to LZ4 compressed content receiving!
   char debugString[64];
 
   int size = 0;
   for(int i = 0; i < Engine::numServers; i++){
     sprintf(debugString, "Receive TCP server %i", i);
 
+    unsigned int numBytesToReceiveTemp = 0;
+
     {
     CProfileSample receiveMessage1(debugString);
-    unsigned int numBytesToReceiveTemp = (Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2;
+    numBytesToReceiveTemp = (Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2;
 
     // ToDo: receiving might be parallelized; allows parallel uploading of the texture data
     SDLNet_TCP_Recv(Engine::socketDescriptor[i], &size, 4);
@@ -225,7 +226,11 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
       cnt -= length;
       ptr += length;
     } while (cnt > 0);
+    }
 
+    sprintf(debugString, "LZ4 decomp server %i", i);
+    {
+    CProfileSample receiveMessage1(debugString);
 #ifdef ANDROID
     LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
 #else 
@@ -259,7 +264,14 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
 }
 
 void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
+  char debugString[64];
+
+  sprintf(debugString, "Receive TCP");
+
   int size;
+
+  CProfileSample receiveMessage1(debugString);
+  {  
   SDLNet_TCP_Recv( Engine::socketDescriptor[0], &size, 4 );
 
   auto cnt = abs(size);
@@ -272,6 +284,7 @@ void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
     cnt -= length;
     ptr += length;
 	} while (cnt > 0);	
+  }
 
   if( size < 0 )
   {
@@ -279,7 +292,11 @@ void NetworkStuff::receiveMessageFromRenderServerETC1NoRect(){
   }
   else
   {
-    LZ4_decompress_safe( lz4Buf, (char*)openglstuff->frameBufferPointer, size, numBytesToReceive );
+    sprintf(debugString, "LZ4 decomp");
+    {
+    CProfileSample receiveMessage1(debugString);
+    LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointer, size, numBytesToReceive);
+    }
   }
 }
 
