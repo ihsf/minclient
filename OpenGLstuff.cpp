@@ -533,11 +533,14 @@ void OpenGLstuff::swapBuffers(){
 
 void OpenGLstuff::drawFPS(){
 	const int width = Engine::screenWidthGL;
-	const int height = Engine::screenHeightGL;
+	int height = Engine::screenHeightGL;
 
   int widthToPrint = width - width/10;
   if(width < 512)
-    widthToPrint = width - width/5;
+    widthToPrint = width - width/4;
+
+  if(height <= 256 && height > 240)
+    height = height - 10;
 
   minclient::Font::glPrint(widthToPrint, height - height/24, Engine::strFrameRate, 0);
 
