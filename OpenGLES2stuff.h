@@ -1,6 +1,10 @@
 #ifndef _OPENGLES2STUFF_H
 #define _OPENGLES2STUFF_H
 
+// TODO: Remove Gear VR stuff for release
+// TODO: Remove Gear VR stuff for release
+// TODO: Remove Gear VR stuff for release
+
 // loadShader() and createProgram() from Google Android NDK
 // license: Apache 2.0, https://developer.android.com/license.html
 #define GL_GLEXT_PROTOTYPES
@@ -10,13 +14,11 @@
 #endif
 
 #ifdef ANDROID
-//  #include <GLES/gl.h>
   #include <GLES2/gl2.h>
   #include <GLES2/gl2ext.h>
   #include <EGL/egl.h>
   #include <EGL/eglext.h>
   #include <android/log.h>
-//  #include "GlUtils.h"   Galaxy Note 4
   typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
 #else
   #include <GL/glew.h>

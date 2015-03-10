@@ -13,8 +13,6 @@ int main(int argc, char *argv[]){
   sdlstuff.tweakFontSize();
   sdlstuff.printResolution();
 
-  SDL_Delay(1000);     // HACKKKKKKKKKK
-
   openglstuff.printCompressedTextureAvailability();
 
   NetworkStuff networkStuff(&camera, &openglstuff);
@@ -41,7 +39,6 @@ int main(int argc, char *argv[]){
 
   // without the exit here it hangs in android
   exit(1);
-
 
   return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef _OPENGLSTUFF_H
 #define _OPENGLSTUFF_H
 
+// ToDo: Remove DXT1 ??
+
 #define GL_GLEXT_PROTOTYPES
 
 #include "Engine.h"

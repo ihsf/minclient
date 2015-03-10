@@ -1,5 +1,7 @@
 #include "OpenGLstuff.h"
 
+// todo: gearVR remove glEnable(GL_WRITEONLY_RENDERING_QCOM);
+
 // GL_OES_compressed_ETC1_RGB8_texture
 #ifndef GL_ETC1_RGB8_OES
   #define GL_ETC1_RGB8_OES                                        0x8D64
@@ -470,7 +472,7 @@ void OpenGLstuff::drawHUD(){
   Engine::buttonRightCenter.x = 400.0f;
   Engine::buttonRightCenter.y = 100.0f;
 
-  // lenovo k900  
+  // lenovo 1920x1080 screen
   if (Engine::screenHeightGL == 1920 && Engine::screenWidthGL == 1080){
     Engine::buttonLeftCenter.x = 175.0f;
     Engine::buttonLeftCenter.y = 175.0f;
@@ -484,39 +486,6 @@ void OpenGLstuff::drawHUD(){
     minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y, "ooo", false);
     minclient::Font::glPrint(Engine::buttonLeftCenter.x, Engine::buttonLeftCenter.y - Engine::fontSize, " o ", false);
   }
-
-  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y + Engine::fontSize, " o ", false);
-  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y,                    "ooo", false);
-  //minclient::Font::glPrint(Engine::buttonRightCenter.x, Engine::buttonRightCenter.y - Engine::fontSize, " o ", false);
-
-  // draw accelerometer values
-#ifdef ANDROID
-#if 0
-  if(Engine::numFramesRendered > 300){
-    // crashes note 4 after a few seconds of usage
-    CVector3 sensorAccel;
-    Sensors::checkSensors(&sensorAccel.x, &sensorAccel.y, &sensorAccel.z);
-
-    char debugString[64];
-    sprintf(debugString, "%3.2f %3.2f %3.2f", sensorAccel.x, sensorAccel.y, sensorAccel.z);
-
-    minclient::Font::glPrint(30, 30, debugString, false);
-
-    CVector3 distanceVector = sensorAccel - previousSensorAccel;
-    const float distance = distanceVector.magnitude();
-
-    sprintf(debugString, "dist: %3.2f", distance);
-    minclient::Font::glPrint(30, 52, debugString, false);
-
-    if(distance > 0.05f){
-      minclient::Font::glPrint(195, 52, "!!!!!!!!", false);
-      Engine::numAccelerometerHits++;
-    }
-
-    previousSensorAccel = sensorAccel;  
-  }
-#endif
-#endif
 }
 
 void OpenGLstuff::swapBuffers(){

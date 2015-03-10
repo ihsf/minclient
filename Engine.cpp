@@ -21,25 +21,25 @@ int Engine::numAccelerometerHits = 0;
   int Engine::screenHeightGL = 1440;
 #else
   #if 0
-    int Engine::screenWidthRT = 1920;  // needs to be divisable by RENDERTILE_SIZE
-    int Engine::screenHeightRT = 1080;  // needs to be divisable by RENDERTILE_SIZE
+    int Engine::screenWidthRT = 1920;  
+    int Engine::screenHeightRT = 1080;  
     int Engine::screenWidthGL = 1920;
     int Engine::screenHeightGL = 1080;
   #else
     #if 0
-      int Engine::screenWidthRT = 1280;  // needs to be divisable by RENDERTILE_SIZE
-      int Engine::screenHeightRT = 720;  // needs to be divisable by RENDERTILE_SIZE
+      int Engine::screenWidthRT = 1280;  
+      int Engine::screenHeightRT = 720;  
       int Engine::screenWidthGL = 1280;
       int Engine::screenHeightGL = 720;
     #else
       #if 0
-        int Engine::screenWidthRT = 240;  // needs to be divisable by RENDERTILE_SIZE
-        int Engine::screenHeightRT = 240;  // needs to be divisable by RENDERTILE_SIZE
+        int Engine::screenWidthRT = 240;  
+        int Engine::screenHeightRT = 240;  
         int Engine::screenWidthGL = 240;
         int Engine::screenHeightGL = 240;
       #else
-        int Engine::screenWidthRT = 512;  // needs to be divisable by RENDERTILE_SIZE
-        int Engine::screenHeightRT = 256;  // needs to be divisable by RENDERTILE_SIZE
+        int Engine::screenWidthRT = 512;  
+        int Engine::screenHeightRT = 256;  
         int Engine::screenWidthGL = 512;
         int Engine::screenHeightGL = 256;
       #endif
@@ -50,8 +50,6 @@ int Engine::numAccelerometerHits = 0;
 int Engine::serverFrameBuffers = 0; 
 
 int Engine::clicksPerSecond = 0;
-
-//int Engine::RENDERTILE_SIZE = 32;
 
 // keys & mouse
 bool Engine::upKey = false;
@@ -66,7 +64,7 @@ bool Engine::crouchKey = false;
 bool Engine::nextFrameStartProfiler = false;   // true to enable profiling and printing the results
 bool Engine::nextFrameStopProfiler = false;
 
-bool Engine::useGVRFrontBuffer = false;// true; //
+bool Engine::useGVRFrontBuffer = false; // samsung gear vr front buffer rendering
 
 vector<char*> Engine::profilerOutput;
 
@@ -170,13 +168,10 @@ void Engine::parseConfigFile(){
 	forceScreenResolution = false;
   fullscreen = false;
 
-	serverFrameBuffers = 1;  // slasher: 1      PHI: 2
+	serverFrameBuffers = 1; 
 	startMap = (char*)"dan3";
   
-  //serverName[0] = (char*)"192.168.0.103";
-  //serverName[0] = (char*)"127.0.0.1";
   serverName[0] = (char*)"192.168.0.100";
-  //serverName[0] = (char*)"192.168.178.30";
   serverPort[0] = 2000;
 
   // config file available?
@@ -198,7 +193,7 @@ void Engine::parseConfigFile(){
     fprintf(out, "#server2 192.168.0.4 2000\n");
     fprintf(out, "#server3 192.168.0.5 2000\n\n");
 
-    // setting this for nexus 5 (1794 x 1080), resulting in 1024x1024
+    // settings for rendering in 1024x1024
     fprintf(out, "##### 4 servers\n");
     fprintf(out, "#rectLeftServer0 0\n");
     fprintf(out, "#rectRightServer0 255\n");
@@ -425,25 +420,28 @@ void Engine::updateGlobalSinus(){
 	angle += frameInterval / 10.0f;
 }
 
+// code snippet calculateOrthoMatrix() from http://stackoverflow.com/questions/9690006/glfrustrum-variant-in-opengl-es-2-0-how-fix-blank-screen
+// author: Aristarhys
+// license: http://creativecommons.org/licenses/by-sa/3.0/
 void Engine::calculateOrthoMatrix(float left, float right, float bottom, float top, float near_, float far_, float result[16]){
   result[0] = 2.0f / (right - left);
   result[1] = 0.0f;
   result[2] = 0.0f;
   result[3] = 0.0f;
 
-  //Second Column
+  // second column
   result[4] = 0.0f;
   result[5] = 2.0f / (top - bottom);
   result[6] = 0.0f;
   result[7] = 0.0f;
 
-  //Third Column
+  // third column
   result[8] = 0.0f;
   result[9] = 0.0f;
   result[10] = -2.0f / (far_ - near_);
   result[11] = 0.0f;
 
-  //Fourth Column
+  // fourth column
   result[12] = -(right + left) / (right - left);
   result[13] = -(top + bottom) / (top - bottom);
   result[14] = -(far_ + near_) / (far_ - near_);

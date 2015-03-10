@@ -6,21 +6,16 @@
 #include "NetworkStuff.h"
 #include <math.h>
 
-/* GL_OES_compressed_ETC1_RGB8_texture */
+// GL_OES_compressed_ETC1_RGB8_texture 
 #ifndef GL_ETC1_RGB8_OES
   #define GL_ETC1_RGB8_OES                                        0x8D64
 #endif
 
-NetworkStuff::NetworkStuff(Camera* camera_, OpenGLstuff* openglstuff_)
-  : lz4Buf( nullptr )
-{
+NetworkStuff::NetworkStuff(Camera* camera_, OpenGLstuff* openglstuff_) : lz4Buf( nullptr ){
 	this->camera = camera_;
 	this->openglstuff = openglstuff_;
 
 	serverLastRendered = Engine::numServers - 1;
-
-	//int blackBarAtBottom = Engine::screenHeightRT % 32;
-	//realHeightConsideringTileSizes = Engine::screenHeightRT - blackBarAtBottom;
 
   numBytesToReceive = 0;
   framesToWait = Engine::numServers * Engine::serverFrameBuffers;	
@@ -157,9 +152,6 @@ void NetworkStuff::sendMessageToRenderServers(){
         minclient::Font::glPrint(10, minclient::Font::AUTO, "Sent message to render server", true);
 		}
 	}
-
-  // Hijack hack
-  // msgBufferSend.rectBottom = Engine::numAccelerometerHits;
 }
 
 bool NetworkStuff::determineIfThisFrameShouldBeRendered(int i){
@@ -176,10 +168,6 @@ bool NetworkStuff::determineIfThisFrameShouldBeRendered(int i){
 void NetworkStuff::receiveMessageFromRenderServer(){
 	if(Engine::numServers == 0)
 		return;
-
-//  if(Engine::numFramesRendered < framesToWait){
-//		return;
-//  }
 
   if(Engine::numFramesRendered <= 3)
     minclient::Font::glPrint(10, minclient::Font::AUTO, "Starting to receive message from render server", true);

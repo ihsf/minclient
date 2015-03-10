@@ -6630,7 +6630,9 @@ void minclient::Font::resetNumLinesPrinted(){
 }
 
 void minclient::Font::glPrintSavedLines(){
-	//glEnable(GL_BLEND);
+#ifndef ANDROID
+	glEnable(GL_BLEND);    // blending takes quite some time in android, so disable it there. 
+#endif
 
 	glBindTexture(GL_TEXTURE_2D, tex->getID());						
 #ifndef ANDROID
@@ -6744,7 +6746,9 @@ void minclient::Font::glPrintSavedLines(){
 	glPopMatrix();									
 #endif
 
-	//glDisable(GL_BLEND);	
+#ifndef ANDROID
+	glDisable(GL_BLEND);	
+#endif
 }
 
 void minclient::Font::resetSavedLines(){

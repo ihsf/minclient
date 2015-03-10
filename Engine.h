@@ -80,7 +80,7 @@ static const int NETWORK_PROTCOL_MAGICK = 123456;
 static const int NETWORK_PROTOCOL_VERSION = 10;
 static const int MAX_SERVERS = 16;
 static const int PORT_TO_SERVER = 2000;
-const char * const MINCLIENT_VERSION = "0.11";
+const char * const MINCLIENT_VERSION = "1.00";
 
 #define NETWORK_ON true
 

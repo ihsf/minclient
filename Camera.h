@@ -22,7 +22,6 @@ class Camera {
 
 		void rotateView(float angle, float X, float Y, float Z);
 
-    void applyMouseLook();
     void applyKeyboardMovements();
 
 		void strafeCamera(float speed);

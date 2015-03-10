@@ -42,8 +42,6 @@ void SDLstuff::init(){
   if(Engine::fullscreen)
     videoFlags |= SDL_WINDOW_FULLSCREEN;
 
-  // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
 #ifdef ANDROID
   // force fullscreen on android
   videoFlags |= SDL_WINDOW_FULLSCREEN;

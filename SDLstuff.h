@@ -26,7 +26,6 @@ class SDLstuff{
     void tweakFontSize();
 
 	private:
-
 		SDL_Event event;
 		SDL_Window* mainWindow;
     SDL_GLContext sdl_glContext;

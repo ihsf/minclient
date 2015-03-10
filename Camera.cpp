@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+// class based on www.gametutorials.com - see license.txt
+
 Camera::Camera(){
 	init();
 }
@@ -7,78 +9,11 @@ Camera::Camera(){
 void Camera::init(){
   position = CVector3(0.0f, 10.0f, -20.0f);
   view = CVector3(0.0f, 10.0f, -19.0f);
-  upVector = CVector3(0.0f, 1.0f, 0.0f);
-  
-  // REMOVE BEFORE RELEASING SOURCE
-  if(!strcmp(Engine::startMap, "island")){
-    position = CVector3(-7659.149902f, 633.134399f, -4382.462402f);                 
-    view     = CVector3(-7658.375977f, 632.928223f, -4383.061523f); 
-  }  
+  upVector = CVector3(0.0f, 1.0f, 0.0f); 
 }
 
 Camera::~Camera(){
 }
-
-
-void Camera::applyMouseLook(){
-#if 0
-#ifndef ANDROID
-  int mouseX, mouseY;                              
-
-  float angleY = 0.0f;                           
-  float angleZ = 0.0f;                           
-  static float currentRotX = 0.0f;
-
-	if(Engine::matrixCamera){
-		setViewMatrixCamera();
-		return;
-	}
-
-	if( (Engine::relativeMouseMotion.x == 0) && (Engine::relativeMouseMotion.y == 0) ) 
-		return;
-
-	if(Engine::currentTime < 0.1f)
-		return;
-
-  angleY = (float)( (-Engine::relativeMouseMotion.x)  / 1000.0f);       
-  angleZ = (float)( (-Engine::relativeMouseMotion.y)  / 1000.0f);     
-
-  Engine::relativeMouseMotion.x = Engine::relativeMouseMotion.y = 0;
-
-	CVector3 viewMinusPosition = view - position;
-
-  float dotProduct = upVector.DotProduct(&viewMinusPosition);
-	
-  currentRotX -= angleZ;  
-
-  if(currentRotX > 1.0f)
-      currentRotX = 1.0f;
-  else if(currentRotX < -1.0f)
-      currentRotX = -1.0f;
-
-	if(dotProduct > 0.95f){					
-		viewMinusPosition.x += 0.05f;
-		viewMinusPosition.y -= 0.1f;
-		viewMinusPosition.normalize();
-		dotProduct = upVector.DotProduct(&viewMinusPosition);
-	}
-
-	if(dotProduct < -0.95f){
-		viewMinusPosition.x += 0.05f;
-		viewMinusPosition.y += 0.1f;
-		viewMinusPosition.normalize();
-		dotProduct = upVector.DotProduct(&viewMinusPosition);
-	}
-
-	CVector3 axis = axis.cross(viewMinusPosition, upVector);
-	axis.normalize();
-
-  rotateView(angleZ, axis.x, axis.y, axis.z);
-  rotateView(angleY, 0, 1, 0);
-#endif
-#endif
-}
-
 
 void Camera::rotateView(float angle, float x, float y, float z){
   CVector3 direction = getDirectionNormalized();
@@ -242,7 +177,6 @@ void Camera::update() {
   strafe = strafe.cross(view - position, upVector);
   strafe.normalize();
 
-  applyMouseLook();
   applyKeyboardMovements();
 }
 

@@ -55,7 +55,6 @@ class NetworkStuff {
     void receiveMessageFromRenderServerETC1Rect();
 
 		unsigned int numBytesToReceive;
-		//int realHeightConsideringTileSizes;
 
 		int serverLastRendered;
 

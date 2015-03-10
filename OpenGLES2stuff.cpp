@@ -1,5 +1,10 @@
 #include "OpenGLES2stuff.h"
 
+// Functions loadShader() and createProgram(), define LOGI from Android NDK with the follwing license:
+//  * Copyright (C) 2009 The Android Open Source Project
+//  * Licensed under the Apache License, Version 2.0 (the "License");
+//  * http://www.apache.org/licenses/LICENSE-2.0
+
 #ifdef ANDROID
   #include <android/log.h>
   #ifndef LOG_TAG
@@ -9,7 +14,6 @@
     #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
   #endif
 
-  //void* OpenGLES2stuff::egl_GVR_FrontBuffer = NULL;
   PFN_GVR_FrontBuffer OpenGLES2stuff::egl_GVR_FrontBuffer;
   EGLSurface OpenGLES2stuff::windowSurface = NULL;
   EGLDisplay OpenGLES2stuff::display = NULL;
@@ -23,7 +27,6 @@ int OpenGLES2stuff::uTextureUnitLocation = 0;
 vector<GLuint> OpenGLES2stuff::programIDs;
 vector<GLuint> OpenGLES2stuff::shaderIDs;
 
-
 OpenGLES2stuff::~OpenGLES2stuff(){
   for (int i = 0; i < (int)shaderIDs.size(); i++){
     glDeleteShader(shaderIDs[i]);
@@ -33,8 +36,6 @@ OpenGLES2stuff::~OpenGLES2stuff(){
     glDeleteProgram(programIDs[i]);
   }
 }
-
-
 
 void OpenGLES2stuff::init(){
 #ifdef ANDROID
@@ -52,8 +53,6 @@ void OpenGLES2stuff::init(){
 #endif
 }
 
-
-
 bool OpenGLES2stuff::setFrontBuffer(){
 #ifdef ANDROID
   if(!Engine::useGVRFrontBuffer)
@@ -65,7 +64,7 @@ bool OpenGLES2stuff::setFrontBuffer(){
 
   // look for the extension
   egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
-  //egl_GVR_FrontBuffer = (void*)eglGetProcAddress("egl_GVR_FrontBuffer");
+
   if(egl_GVR_FrontBuffer){
     LOGI("egl_GVR_FrontBuffer address succeeded");
     printf("egl_GVR_FrontBuffer address succeeded\n"); 
