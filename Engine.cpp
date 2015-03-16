@@ -26,7 +26,7 @@ int Engine::numAccelerometerHits = 0;
     int Engine::screenWidthGL = 1920;
     int Engine::screenHeightGL = 1080;
   #else
-    #if 0
+    #if 1
       int Engine::screenWidthRT = 1280;  
       int Engine::screenHeightRT = 720;  
       int Engine::screenWidthGL = 1280;
@@ -61,17 +61,10 @@ bool Engine::rightKey = false;
 bool Engine::jumpKey = false;
 bool Engine::crouchKey = false;
 
-bool Engine::nextFrameStartProfiler = false;   // true to enable profiling and printing the results
-bool Engine::nextFrameStopProfiler = false;
-
-bool Engine::useGVRFrontBuffer = false; // samsung gear vr front buffer rendering
-
-vector<char*> Engine::profilerOutput;
-
 bool Engine::upscale = true;
 
 CVector2 Engine::relativeMouseMotion;
-	
+  
 bool Engine::forceScreenResolution = false;
 bool Engine::done = false;
 
@@ -101,7 +94,6 @@ float Engine::lastTime = 0.0f;				// This will hold the time from the last frame
 
 char Engine::strFrameRate[32]; 
 
-bool Engine::serverUseDXT1 = false;
 bool Engine::serverUseETC1 = false;
 
 CVector2 Engine::buttonLeftCenter;
@@ -113,9 +105,9 @@ CVector2 Engine::buttonPressed;
 char Engine::debugMessage[64];
 
 void Engine::init(){
-	for(int i = 0; i < MAX_SERVERS; i++){
-		serverName[i] = NULL;
-		serverPort[i] = PORT_TO_SERVER;
+  for(int i = 0; i < MAX_SERVERS; i++){
+    serverName[i] = NULL;
+    serverPort[i] = PORT_TO_SERVER;
 
     rectLeftServer[i] = 0;
     rectTopServer[i] = 0;
@@ -123,13 +115,13 @@ void Engine::init(){
     rectBottomServer[i] = 0;
 
     rectSizeX[i] = rectSizeY[i] = 0;
-	}
+  }
 
   sprintf(strFrameRate, "0fps");
 
   debugMessage[0] = 0;
 
-	parseConfigFile();	
+  parseConfigFile();	
 
   buttonPressed = CVector2(-666.6f, -666.6f);
   buttonCenter = CVector2(520.0f, 175.0f);
@@ -157,38 +149,36 @@ void Engine::init(){
     }
   }
 
-	// seed the randomizer
-	srand(currentTime);	
+  // seed the randomizer
+  srand(currentTime);	
 
-	cout << "Engine initialized." << endl;
+  cout << "Engine initialized." << endl;
 }
 
 void Engine::parseConfigFile(){
   // instead of parsing a real file we just hardcode everything
-	forceScreenResolution = false;
+  forceScreenResolution = false;
   fullscreen = false;
 
-	serverFrameBuffers = 1; 
-	startMap = (char*)"dan3";
+  serverFrameBuffers = 1; 
+  startMap = (char*)"dan3";
   
   serverName[0] = (char*)"192.168.0.100";
   serverPort[0] = 2000;
 
   // config file available?
-	FILE* in = fopen(CONFIG_FILE, "rb");
-	if(!in){
-		cout << "Could not open config file " << CONFIG_FILE << endl;
-		cout << "Using default values. Trying to create new config file." << endl;
+  FILE* in = fopen(CONFIG_FILE, "rb");
+  if(!in){
+    cout << "Could not open config file " << CONFIG_FILE << endl;
+    cout << "Using default values. Trying to create new config file." << endl;
 
     FILE* out = fopen(CONFIG_FILE, "wb");
     if(!out)
       return;
 
-    fprintf(out, "serverUseDXT1   false\n");
     fprintf(out, "serverUseETC1   true\n");
-    fprintf(out, "serverUseFFMPEG false\n");
 
-	  fprintf(out, "server0 %s %i\n\n", serverName[0], serverPort[0]);
+    fprintf(out, "server0 %s %i\n\n", serverName[0], serverPort[0]);
     fprintf(out, "#server1 192.168.0.3 2000\n");
     fprintf(out, "#server2 192.168.0.4 2000\n");
     fprintf(out, "#server3 192.168.0.5 2000\n\n");
@@ -228,158 +218,148 @@ void Engine::parseConfigFile(){
 
     fprintf(out, "startMap dan3\n");
 
-	  fclose(out);
-		return;
-	}
+    fclose(out);
+    return;
+  }
 
-	char* firstWord = NULL; 
-	char* secondWord = NULL; 
+  char* firstWord = NULL; 
+  char* secondWord = NULL; 
   char* thirdWord = NULL;
-	bool fileIsOver = false;
-	int i; 
+  bool fileIsOver = false;
+  int i; 
   char buffer[1024];
-	char c = fgetc(in);	
-	while(!feof(in) && !fileIsOver){
-		for(i = 0; (c != 0x0A) && (i < 1023) && !fileIsOver; i++){
-			buffer[i] = c;
-			c = fgetc(in);
-			if(feof(in))
-				fileIsOver = true;
-		}
-		c = fgetc(in);
+  char c = fgetc(in);	
+  while(!feof(in) && !fileIsOver){
+    for(i = 0; (c != 0x0A) && (i < 1023) && !fileIsOver; i++){
+      buffer[i] = c;
+      c = fgetc(in);
+      if(feof(in))
+        fileIsOver = true;
+    }
+    c = fgetc(in);
 
-		if(feof(in))
-			fileIsOver = true;
-		buffer[i] = '\0';
-		CTextParser::eliminateEmptySpaceBeforeContent(buffer);
-		
-		// don't add empty lines
-		if(buffer[0] == '\0')
-			continue;
+    if(feof(in))
+      fileIsOver = true;
+    buffer[i] = '\0';
+    CTextParser::eliminateEmptySpaceBeforeContent(buffer);
+    
+    // don't add empty lines
+    if(buffer[0] == '\0')
+      continue;
 
-		// don't add comment lines
-		if(buffer[0] == '/')
-			continue;
-		
-		CTextParser::eliminateReturnAtEndOfLine(buffer);
-		
-		// don't add empty lines (after killing return character)
-		if(buffer[0] == '\0')
-			continue;
+    // don't add comment lines
+    if(buffer[0] == '/')
+      continue;
+    
+    CTextParser::eliminateReturnAtEndOfLine(buffer);
+    
+    // don't add empty lines (after killing return character)
+    if(buffer[0] == '\0')
+      continue;
 
-		firstWord = CTextParser::getFirstWord(buffer);
-		secondWord = CTextParser::getSecondWord(buffer);
+    firstWord = CTextParser::getFirstWord(buffer);
+    secondWord = CTextParser::getSecondWord(buffer);
     thirdWord =  CTextParser::getThirdWord(buffer);
-		
-		if(!secondWord)
-			continue;
+    
+    if(!secondWord)
+      continue;
 
-		// 
-		// serverUseDXT1
-		// 
-		else if(!strcmp(firstWord, "serverUseDXT1")){
-			if(!strcmp(secondWord, "true")){
-				serverUseDXT1 = true;
-			}	else{
-				serverUseDXT1 = false;
-			}
-		}
 
-		// 
-		// serverUseETC1
-		// 
-		else if(!strcmp(firstWord, "serverUseETC1")){
-			if(!strcmp(secondWord, "true")){
-				serverUseETC1 = true;
-			}	else{
-				serverUseETC1 = false;
-			}
-		}
+    // 
+    // serverUseETC1
+    // 
+    else if(!strcmp(firstWord, "serverUseETC1")){
+      if(!strcmp(secondWord, "true")){
+        serverUseETC1 = true;
+      }	else{
+        serverUseETC1 = false;
+      }
+    }
 
-		// 
-		// startMap
-		// 
-		else if(!strcmp(firstWord, "startMap")){
-			startMap = new char[strlen(secondWord) + 1];
-			strcpy(startMap, secondWord);
-		}
+    // 
+    // startMap
+    // 
+    else if(!strcmp(firstWord, "startMap")){
+      startMap = new char[strlen(secondWord) + 1];
+      strcpy(startMap, secondWord);
+    }
 
-		// 
-		// server0
-		// server1
-		// ...
-		//
-		for(int i = numServers; i < MAX_SERVERS; i++){
-			char searchString[128];
-			sprintf(searchString, "server%i", i);
+    // 
+    // server0
+    // server1
+    // ...
+    //
+    for(int i = numServers; i < MAX_SERVERS; i++){
+      char searchString[128];
+      sprintf(searchString, "server%i", i);
 
-			if(!strcmp(firstWord, searchString)){
-				serverName[i] = new char[strlen(secondWord) + 1];
-				strcpy(serverName[i], secondWord);
+      if(!strcmp(firstWord, searchString)){
+        serverName[i] = new char[strlen(secondWord) + 1];
+        strcpy(serverName[i], secondWord);
 
-				if(thirdWord){
-					serverPort[i] = atoi(thirdWord);
-				}
+        if(thirdWord){
+          serverPort[i] = atoi(thirdWord);
+        }
 
-				numServers = i + 1;
-			} else {				
-				break;
-			}
-		}
+        numServers = i + 1;
+      } else {				
+        break;
+      }
+    }
 
-		// 
-		// rectLeftServer0, rectLeftServer1, ...
-		//
-		for(int i = 0; i < MAX_SERVERS; i++){
-			char searchString[128];
-			sprintf(searchString, "rectLeftServer%i", i);
+    // 
+    // rectLeftServer0, rectLeftServer1, ...
+    //
+    for(int i = 0; i < MAX_SERVERS; i++){
+      char searchString[128];
+      sprintf(searchString, "rectLeftServer%i", i);
 
-			if(!strcmp(firstWord, searchString)){
-				rectLeftServer[i] = atoi(secondWord);
-			}
-		}
+      if(!strcmp(firstWord, searchString)){
+        rectLeftServer[i] = atoi(secondWord);
+      }
+    }
 
-		// 
-		// rectTopServer0, rectTopServer1, ...
-		//
-		for(int i = 0; i < MAX_SERVERS; i++){
-			char searchString[128];
-			sprintf(searchString, "rectTopServer%i", i);
+    // 
+    // rectTopServer0, rectTopServer1, ...
+    //
+    for(int i = 0; i < MAX_SERVERS; i++){
+      char searchString[128];
+      sprintf(searchString, "rectTopServer%i", i);
 
-			if(!strcmp(firstWord, searchString)){
-				rectTopServer[i] = atoi(secondWord);
-			}
-		}
+      if(!strcmp(firstWord, searchString)){
+        rectTopServer[i] = atoi(secondWord);
+      }
+    }
 
-		// 
-		// rectRightServer0, rectRightServer1, ...
-		//
-		for(int i = 0; i < MAX_SERVERS; i++){
-			char searchString[128];
-			sprintf(searchString, "rectRightServer%i", i);
+    // 
+    // rectRightServer0, rectRightServer1, ...
+    //
+    for(int i = 0; i < MAX_SERVERS; i++){
+      char searchString[128];
+      sprintf(searchString, "rectRightServer%i", i);
 
-			if(!strcmp(firstWord, searchString)){
-				rectRightServer[i] = atoi(secondWord);
-			}
-		}
+      if(!strcmp(firstWord, searchString)){
+        rectRightServer[i] = atoi(secondWord);
+      }
+    }
 
-		// 
-		// rectBottomServer0, rectBottomServer1, ...
-		//
-		for(int i = 0; i < MAX_SERVERS; i++){
-			char searchString[128];
-			sprintf(searchString, "rectBottomServer%i", i);
+    // 
+    // rectBottomServer0, rectBottomServer1, ...
+    //
+    for(int i = 0; i < MAX_SERVERS; i++){
+      char searchString[128];
+      sprintf(searchString, "rectBottomServer%i", i);
 
-			if(!strcmp(firstWord, searchString)){
-				rectBottomServer[i] = atoi(secondWord);
-			}
-		}
+      if(!strcmp(firstWord, searchString)){
+        rectBottomServer[i] = atoi(secondWord);
+      }
+    }
 
-		delete [] firstWord;
-		delete [] secondWord;
-	}
+    delete [] firstWord;
+    delete [] secondWord;
+  }
 
-	fclose(in);
+  fclose(in);
 
   // there has been at least one defined on top
   if(numServers == 0)
@@ -389,11 +369,11 @@ void Engine::parseConfigFile(){
 
 void Engine::calculateFrameRate(){
   float totalCurrentTime = SDL_GetTicks() * 0.001f;
-	float localCurrentTime = totalCurrentTime - timeWhenMapWasLoaded;
+  float localCurrentTime = totalCurrentTime - timeWhenMapWasLoaded;
               
-	// save old time for stereoscopic rendering where both frames need to have the same time
-	currentTimeLastFrame = currentTime;
-	currentTime = localCurrentTime;                              
+  // save old time for stereoscopic rendering where both frames need to have the same time
+  currentTimeLastFrame = currentTime;
+  currentTime = localCurrentTime;                              
 
   frameInterval = currentTime - frameTime;
   frameTime = currentTime;
@@ -414,10 +394,10 @@ void Engine::calculateFrameRate(){
 
 
 void Engine::updateGlobalSinus(){
-	if(angle > 360.0f)
-		angle = 0.0f;
+  if(angle > 360.0f)
+    angle = 0.0f;
 
-	angle += frameInterval / 10.0f;
+  angle += frameInterval / 10.0f;
 }
 
 // code snippet calculateOrthoMatrix() from http://stackoverflow.com/questions/9690006/glfrustrum-variant-in-opengl-es-2-0-how-fix-blank-screen

@@ -24,16 +24,12 @@ SET(MINCLIENT_SOURCES
 	CVector2.cpp
 	CVector3.cpp
 	Engine.cpp
-	Etc1.cpp
 	Font.cpp
 	lz4-r123/lz4.c
 	MinClient.cpp
 	NetworkStuff.cpp
 	OpenGLES2stuff.cpp
 	OpenGLstuff.cpp
-	ProfileLogHandler.cpp
-	Profiler.cpp
-	rg_etc1.cpp
 	SDLstuff.cpp
    )
 

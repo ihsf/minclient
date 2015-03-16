@@ -12,31 +12,31 @@
 using namespace std;
 
 class CTexture{
-	public:
-		virtual void generateTexture() = 0;  
+  public:
+    virtual void generateTexture() = 0;  
 
-		const char* getTextureName();
-		finline unsigned int getID(){ return ID; }
+    const char* getTextureName();
+    finline unsigned int getID(){ return ID; }
 
-		void setName(const char* const name);
-		char* getName(){ return textureName; }
+    void setName(const char* const name);
+    char* getName(){ return textureName; }
 
     finline int getSizeX(){ return sizeX; }
     finline int getSizeY(){ return sizeY; }
     finline int getChannels(){ return channels; }
 
-		unsigned char *data;   
+    unsigned char *data;   
 
-	protected:	  
-		void init();
+  protected:	  
+    void init();
 
-		int channels;      
-		int sizeX;            
-		int sizeY;      
+    int channels;      
+    int sizeX;            
+    int sizeY;      
 
-		unsigned int ID;       
+    unsigned int ID;       
   
-		char* textureName;	 
+    char* textureName;	 
 };
 
 #endif

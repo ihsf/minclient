@@ -7,7 +7,7 @@
 #include <math.h>
 
 #ifdef _WIN32
-	#include <windows.h>
+  #include <windows.h>
 #endif
 
 #include <SDL.h>
@@ -17,8 +17,6 @@
 #include "SDLstuff.h"
 #include "NetworkStuff.h"
 #include "Font.h"
-#include "Profiler.h"
-#include "ProfileLogHandler.h"
 #include "OpenGLES2stuff.h"
 
 using namespace std;

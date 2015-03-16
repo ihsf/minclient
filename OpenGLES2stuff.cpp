@@ -13,10 +13,6 @@
   #ifndef LOGI
     #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
   #endif
-
-  PFN_GVR_FrontBuffer OpenGLES2stuff::egl_GVR_FrontBuffer;
-  EGLSurface OpenGLES2stuff::windowSurface = NULL;
-  EGLDisplay OpenGLES2stuff::display = NULL;
 #endif
 
 unsigned int OpenGLES2stuff::programID = 0;
@@ -52,54 +48,6 @@ void OpenGLES2stuff::init(){
 }
 #endif
 }
-
-bool OpenGLES2stuff::setFrontBuffer(){
-#ifdef ANDROID
-  if(!Engine::useGVRFrontBuffer)
-    return false;
-
-  // Galaxy Note 4
-  display = eglGetDisplay( EGL_DEFAULT_DISPLAY );
-  windowSurface = eglGetCurrentSurface( EGL_DRAW );		// swapbuffers will be called on this
-
-  // look for the extension
-  egl_GVR_FrontBuffer = (PFN_GVR_FrontBuffer)eglGetProcAddress("egl_GVR_FrontBuffer");
-
-  if(egl_GVR_FrontBuffer){
-    LOGI("egl_GVR_FrontBuffer address succeeded");
-    printf("egl_GVR_FrontBuffer address succeeded\n"); 
-    strcat(Engine::debugMessage, "egl_GVR_FB address succ. ");
-
-    void* ret = egl_GVR_FrontBuffer( windowSurface );
-    if(ret){
-      LOGI("egl_GVR_FrontBuffer call succeeded");
-      printf("egl_GVR_FrontBuffer call succeeded\n");
-      strcat(Engine::debugMessage, "egl_GVR_FB call succ. ");
-    } else {
-      strcat(Engine::debugMessage, "egl_GVR_FB call NOT succ. ");
-    }
-
-    glEnable(GL_WRITEONLY_RENDERING_QCOM);
- 
-    return true;
-  } else {
-    Engine::useGVRFrontBuffer = false;
-    LOGI("egl_GVR_FrontBuffer address failed");
-    printf("egl_GVR_FrontBuffer address failed\n");
-    strcat(Engine::debugMessage, "egl_GVR_FB address failed. ");
-    return false;
-  }
-#endif
-
-  return false;
-}
-
-void OpenGLES2stuff::swapBuffer(){
-#ifdef ANDROID
-  eglSwapBuffers(display, windowSurface);	// swap buffer will operate que/deque related process internally
-#endif
-}
-
 
 GLuint OpenGLES2stuff::loadShader(GLenum shaderType, const char* source) {
   GLuint shader = glCreateShader(shaderType);

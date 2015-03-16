@@ -35,68 +35,68 @@ class CVector2 {
       return CVector2(x / value, y / value);
     }
 
-		finline bool operator== (CVector2 v){
-			if(x == v.x && y == v.y)
-				return true;
-			else
-				return false;
-		}
+  finline bool operator== (CVector2 v){
+    if(x == v.x && y == v.y)
+      return true;
+    else
+      return false;
+  }
 
-		finline bool operator!= (CVector2 v){
-			if(x == v.x && y == v.y)
-				return false;
-			else
-				return true;
-		}
+  finline bool operator!= (CVector2 v){
+    if(x == v.x && y == v.y)
+      return false;
+    else
+      return true;
+  }
 
-		finline CVector2 operator-() const { 
-			return CVector2(-x, -y); 
-		} 
+  finline CVector2 operator-() const { 
+    return CVector2(-x, -y); 
+  } 
 
-		finline float magnitude(){
-			return sqrtf((x * x) + (y * y));
-		}
+  finline float magnitude(){
+    return sqrtf((x * x) + (y * y));
+  }
 
-		finline void normalize(){
-			const float magnitudeValue = magnitude();
+  finline void normalize(){
+    const float magnitudeValue = magnitude();
 
-			x = x / magnitudeValue;
-			y = y / magnitudeValue;
-		}
+    x = x / magnitudeValue;
+    y = y / magnitudeValue;
+  }
 
-		finline void normalizeAndSaveMagnitude(float* pMagnitude){
-			*pMagnitude = magnitude();
+  finline void normalizeAndSaveMagnitude(float* pMagnitude){
+    *pMagnitude = magnitude();
 
-			x = x / *pMagnitude;
-			y = y / *pMagnitude;
-		}
+    x = x / *pMagnitude;
+    y = y / *pMagnitude;
+  }
 
-    finline void clamp(){
-      if(x < 0.0f)
-        x = 0.0f;
-      if(x > 1.0f)
-        x = 1.0f;
- 
-      if(y < 0.0f)
-        y = 0.0f;
-      if(y > 1.0f)
-        y = 1.0f;
-    }
+  finline void clamp(){
+    if(x < 0.0f)
+      x = 0.0f;
+    if(x > 1.0f)
+      x = 1.0f;
 
-    finline CVector2 operator*(CVector2 v){
-      return CVector2(x * v.x, y * v.y);
-    }
+    if(y < 0.0f)
+      y = 0.0f;
+    if(y > 1.0f)
+      y = 1.0f;
+  }
 
-    int maxComponentAbs();
+  finline CVector2 operator*(CVector2 v){
+    return CVector2(x * v.x, y * v.y);
+  }
 
-		friend ostream& operator<<(ostream& s, const CVector2& vec);
+  int maxComponentAbs();
 
-    float x, y;
+  friend ostream& operator<<(ostream& s, const CVector2& vec);
 
-    typedef enum{
-      X_COMPONENT = 0,
-      Y_COMPONENT,
-    } components;
+  float x, y;
+
+  typedef enum{
+    X_COMPONENT = 0,
+    Y_COMPONENT,
+  } components;
 };
 
 const CVector2 operator*(float num, const CVector2& rhs);

@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "OpenGLstuff.h"
 #include "Font.h"
-#include "Profiler.h"
 
 using namespace std;
 
@@ -33,30 +32,30 @@ struct clientMessage{
 };
 
 class NetworkStuff {
-	public:
-		NetworkStuff(Camera* camera_, OpenGLstuff* openglstuff_);
-		~NetworkStuff();
+  public:
+    NetworkStuff(Camera* camera_, OpenGLstuff* openglstuff_);
+    ~NetworkStuff();
 
-		void sendMessageToRenderServers();
+    void sendMessageToRenderServers();
     void receiveMessageFromRenderServer();
 
-	private:
-		Camera* camera;
-		OpenGLstuff* openglstuff; 
+  private:
+    Camera* camera;
+    OpenGLstuff* openglstuff; 
     char* lz4Buf;
 
-		void init();
+    void init();
     void determineNumBytesToReceive();
-		bool determineIfThisFrameShouldBeRendered(int i);
-		void sendInitPackets();
+    bool determineIfThisFrameShouldBeRendered(int i);
+    void sendInitPackets();
 
-		void receiveMessageFromRenderServerETC1();
+    void receiveMessageFromRenderServerETC1();
     void receiveMessageFromRenderServerETC1NoRect();
     void receiveMessageFromRenderServerETC1Rect();
 
-		unsigned int numBytesToReceive;
+    unsigned int numBytesToReceive;
 
-		int serverLastRendered;
+    int serverLastRendered;
 
     int framesToWait;
 

@@ -11,11 +11,11 @@ using namespace std;
 class CTextureGL : public CTexture{
    public:
     CTextureGL(unsigned char* data_, int sizeX_, int sizeY_, int channels_);
-	  CTextureGL();
+    CTextureGL();
 
-	  ~CTextureGL();
+    ~CTextureGL();
 
-	  void generateTexture();	  
+    void generateTexture();	  
 
    private:
 

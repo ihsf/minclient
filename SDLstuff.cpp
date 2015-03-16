@@ -2,7 +2,7 @@
 #include <SDL_syswm.h>
 
 SDLstuff::SDLstuff(){	
-	mainWindow = NULL;
+  mainWindow = NULL;
   sdl_glContext = NULL;
 
   init();
@@ -14,27 +14,11 @@ SDLstuff::~SDLstuff(){
 }
 
 void SDLstuff::init(){
-	if( SDL_Init( SDL_INIT_VIDEO  | SDL_INIT_NOPARACHUTE  ) < 0 ) {
-		cerr << "Failed initializing SDL Video: " << SDL_GetError() << endl;
-		exit(1);
-	} 
-  /*
-  SDL_DisplayMode mode;
+  if( SDL_Init( SDL_INIT_VIDEO  | SDL_INIT_NOPARACHUTE  ) < 0 ) {
+    cerr << "Failed initializing SDL Video: " << SDL_GetError() << endl;
+    exit(1);
+  } 
 
-  int defaultdisplay = SDL_GetDisplayMode(0, 0, &mode);
-
-  // DANIEL: change development 30 inch dell screen to 1920x1080 so the screen is not fully filled
-  if(mode.w == 2560 && mode.h == 1600){
-    mode.w = 1920;
-    mode.h = 1080;
-  }
-
-  mode.w = 240;
-  mode.h = 240;
-
-  Engine::screenWidthGL = mode.w;
-  Engine::screenHeightGL = mode.h;
-  */
   cout << "Display mode: " << Engine::screenWidthGL << " x " << Engine::screenHeightGL << endl;
   cout << "Render mode: " << Engine::screenWidthRT << " x " << Engine::screenHeightRT << endl;
 
@@ -90,7 +74,7 @@ void SDLstuff::printResolution(){
 }
 
 void SDLstuff::checkEvents(){
-	while( SDL_PollEvent(& event) ) {
+  while( SDL_PollEvent(& event) ) {
     switch(event.type){
       case SDL_KEYDOWN:
         handleKeyPressEvent(&event.key.keysym);
@@ -115,7 +99,7 @@ void SDLstuff::checkEvents(){
       default:
         break;
     } 
-	}
+  }
 }
 
 void SDLstuff::handleMouseMotionEvent(SDL_MouseMotionEvent* mouseMotion){
@@ -129,10 +113,10 @@ void SDLstuff::handleMouseMotionEvent(SDL_MouseMotionEvent* mouseMotion){
 
 void SDLstuff::handleMousePressEvent(SDL_MouseButtonEvent* mouse){
 /*
-	if((mouse->button & SDL_BUTTON_LEFT) == SDL_BUTTON_LEFT)
-		Engine::leftButton = true;
-	else if((mouse->button & SDL_BUTTON_RIGHT) == SDL_BUTTON_RIGHT)
-		Engine::rightButton = true;
+  if((mouse->button & SDL_BUTTON_LEFT) == SDL_BUTTON_LEFT)
+    Engine::leftButton = true;
+  else if((mouse->button & SDL_BUTTON_RIGHT) == SDL_BUTTON_RIGHT)
+    Engine::rightButton = true;
 */
   Engine::buttonPressed = CVector2(mouse->x, mouse->y);
 
@@ -145,110 +129,98 @@ void SDLstuff::handleMousePressEvent(SDL_MouseButtonEvent* mouse){
 
 void SDLstuff::handleMouseReleaseEvent(SDL_MouseButtonEvent* mouse){
 /*
-	if((mouse->button & SDL_BUTTON_LEFT) == SDL_BUTTON_LEFT)
-		Engine::leftButton = false;
-	else if((mouse->button & SDL_BUTTON_RIGHT) == SDL_BUTTON_RIGHT)
-		Engine::rightButton = false;
+  if((mouse->button & SDL_BUTTON_LEFT) == SDL_BUTTON_LEFT)
+    Engine::leftButton = false;
+  else if((mouse->button & SDL_BUTTON_RIGHT) == SDL_BUTTON_RIGHT)
+    Engine::rightButton = false;
 */
 
   Engine::buttonPressed = CVector2(-666.6f, -666.6f);
-//#ifdef ANDROID
+
   Engine::upKey = false;
   Engine::downKey = false; 
   Engine::leftKey = false; 
   Engine::rightKey = false;
   Engine::jumpKey = false;
   Engine::crouchKey = false;
-//#endif
 }
 
 void SDLstuff::handleKeyPressEvent(SDL_Keysym * keysym){  
-	SDL_Keycode key = keysym->sym;
+  SDL_Keycode key = keysym->sym;
    
-	switch(key){
-		case SDLK_ESCAPE:                                  
-		  Engine::done = true;		
-			break;
+  switch(key){
+    case SDLK_ESCAPE:                                  
+      Engine::done = true;		
+      break;
 
     case SDLK_UP:                                    
     case SDLK_w:
-			Engine::upKey = true;                      
+      Engine::upKey = true;                      
       break;
         
-		case SDLK_DOWN:                                   
-		case SDLK_s:
-			Engine::downKey = true; 
+    case SDLK_DOWN:                                   
+    case SDLK_s:
+      Engine::downKey = true; 
       break;
 
-		case SDLK_RIGHT:                                  
-		case SDLK_d:                 
+    case SDLK_RIGHT:                                  
+    case SDLK_d:                 
       Engine::leftKey = true;
       break;
 
-		case SDLK_LEFT:                                   
-		case SDLK_a:
-			Engine::rightKey = true; 
+    case SDLK_LEFT:                                   
+    case SDLK_a:
+      Engine::rightKey = true; 
       break;
 
-	  case SDLK_SPACE:
-		  Engine::jumpKey = true;
-			break;
+    case SDLK_SPACE:
+      Engine::jumpKey = true;
+      break;
 
-	  case SDLK_c:
-		  Engine::crouchKey = true;
-			break;
+    case SDLK_c:
+      Engine::crouchKey = true;
+      break;
 
-	  case SDLK_p:
-      // profiler
-      if(CProfileSample::bProfilerIsRunning)
-				Engine::nextFrameStopProfiler = true;
-			else
-				Engine::nextFrameStartProfiler = true;
-
-      //CProfileSample::ResetAll();
-
-			break;
-
-		default:                                       
-			break;                                    
-		}
+    default:                                       
+      break;                                    
+    }
 }
 
 void SDLstuff::handleKeyReleaseEvent(SDL_Keysym * keysym){
-	SDL_Keycode key = keysym->sym;
+  SDL_Keycode key = keysym->sym;
 
   switch(key){
-		case SDLK_UP:                       
-		case SDLK_w:
-				Engine::upKey = false;      
-			break;
+    case SDLK_UP:                       
+    case SDLK_w:
+        Engine::upKey = false;      
+      break;
         
-		case SDLK_DOWN:                    
-		case SDLK_s:
-				Engine::downKey = false;     
-			break;
+    case SDLK_DOWN:                    
+    case SDLK_s:
+        Engine::downKey = false;     
+      break;
 
-		case SDLK_RIGHT:                   
-		case SDLK_d:
-			Engine::leftKey = false;    
-			break;
+    case SDLK_RIGHT:                   
+    case SDLK_d:
+      Engine::leftKey = false;    
+      break;
 
-		case SDLK_LEFT:                    
-		case SDLK_a:
-			Engine::rightKey = false;   
-			break;
+    case SDLK_LEFT:                    
+    case SDLK_a:
+      Engine::rightKey = false;   
+      break;
 
-		case SDLK_SPACE:
-			Engine::jumpKey = false;
-			break;
+    case SDLK_SPACE:
+      Engine::jumpKey = false;
+      break;
 
-		case SDLK_c:
-			Engine::crouchKey = false;
-			break;
+    case SDLK_c:
+      Engine::crouchKey = false;
+      break;
 
-		default:                       
-			break;                    
-	} 
+    default:                       
+      break;                    
+  } 
 }
 
 void SDLstuff::grabKeyAndMouse(){
@@ -260,11 +232,11 @@ void SDLstuff::ungrabKeyAndMouse(){
 }
 
 void SDLstuff::closeSDL_Net(){
-	for(int i = 0; i < Engine::numServers; i++){
-		SDLNet_TCP_Close(Engine::socketDescriptor[i]);
-	}
+  for(int i = 0; i < Engine::numServers; i++){
+    SDLNet_TCP_Close(Engine::socketDescriptor[i]);
+  }
 
-	SDLNet_Quit();
+  SDLNet_Quit();
 }
 
 

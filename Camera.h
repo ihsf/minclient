@@ -9,35 +9,34 @@
 
 using namespace std;
 
-// handles the camera movement
 class Camera {
-	public:
-	  Camera();
-		~Camera();
+  public:
+    Camera();
+    ~Camera();
 
     finline CVector3 getPosition() { return position; }
     finline CVector3 getView()     { return view; }
     finline CVector3 getUpVector() { return upVector; }
-		CVector3 getDirectionNormalized();   
+    CVector3 getDirectionNormalized();   
 
-		void rotateView(float angle, float X, float Y, float Z);
+    void rotateView(float angle, float X, float Y, float Z);
 
     void applyKeyboardMovements();
 
-		void strafeCamera(float speed);
-		void moveCamera(float speed);
+    void strafeCamera(float speed);
+    void moveCamera(float speed);
 
-		void update();		
+    void update();
 
-	private:
-		void init();
+  private:
+    void init();
 
-		CVector3 position;                   
-		CVector3 view;                       
-		CVector3 upVector;       
-		CVector3 strafe;    
-		
-		void setViewMatrixCamera();
+    CVector3 position;                   
+    CVector3 view;                       
+    CVector3 upVector;       
+    CVector3 strafe;    
+
+    void setViewMatrixCamera();
 };
 
 #endif

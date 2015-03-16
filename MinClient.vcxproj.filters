@@ -13,28 +13,15 @@
     <ClInclude Include="OpenGLES2stuff.h" />
     <ClInclude Include="OpenGLstuff.h" />
     <ClInclude Include="SDLstuff.h" />
-    <ClInclude Include="Etc1.h">
-      <Filter>etc1</Filter>
-    </ClInclude>
-    <ClInclude Include="rg_etc1.h">
-      <Filter>etc1</Filter>
-    </ClInclude>
     <ClInclude Include="CVector2.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="CVector3.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="Profiler.h">
-      <Filter>profiler</Filter>
-    </ClInclude>
-    <ClInclude Include="ProfileLogHandler.h">
-      <Filter>profiler</Filter>
-    </ClInclude>
     <ClInclude Include="lz4-r123\lz4.h">
       <Filter>lz4</Filter>
     </ClInclude>
-    <ClInclude Include="Sensors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -48,38 +35,19 @@
     <ClCompile Include="OpenGLES2stuff.cpp" />
     <ClCompile Include="OpenGLstuff.cpp" />
     <ClCompile Include="SDLstuff.cpp" />
-    <ClCompile Include="Etc1.cpp">
-      <Filter>etc1</Filter>
-    </ClCompile>
-    <ClCompile Include="rg_etc1.cpp">
-      <Filter>etc1</Filter>
-    </ClCompile>
     <ClCompile Include="CVector2.cpp">
       <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="CVector3.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="ProfileLogHandler.cpp">
-      <Filter>profiler</Filter>
-    </ClCompile>
-    <ClCompile Include="Profiler.cpp">
-      <Filter>profiler</Filter>
-    </ClCompile>
     <ClCompile Include="lz4-r123\lz4.c">
       <Filter>lz4</Filter>
     </ClCompile>
-    <ClCompile Include="Sensors.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="etc1">
-      <UniqueIdentifier>{00df8cfd-3e1a-43f3-ae1e-348e63534699}</UniqueIdentifier>
-    </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{2a84cbba-c5e4-4b75-b5b5-2546a457cbfa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="profiler">
-      <UniqueIdentifier>{97a5c19d-8474-4247-b9e1-5ca554aa75eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="lz4">
       <UniqueIdentifier>{4270c80a-74b5-4e29-80d4-8a11b4c429b2}</UniqueIdentifier>

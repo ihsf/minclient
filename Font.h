@@ -17,23 +17,23 @@ const int FONT_MAX_LETTERS_ON_SCREEN = 640;
 // this font works using OpenGL quads with textures
 namespace minclient {
 class Font{
-	public:
-		Font();
-		~Font();
+  public:
+    Font();
+    ~Font();
 
-		static void glPrint(GLint x, GLint y, const char* const string, bool swapBuffer = false);
-		static void init(SDL_Window* mainWindow_); 
+    static void glPrint(GLint x, GLint y, const char* const string, bool swapBuffer = false);
+    static void init(SDL_Window* mainWindow_); 
     static void glPrintSavedLines();
     static void resetSavedLines();
 
-		typedef enum{
-			AUTO = -666,
-		} enum_FontMode;
+    typedef enum{
+      AUTO = -666,
+    } enum_FontMode;
 
     static void resetNumLinesPrinted();
 
-	private:
-		static CTextureGL* tex;
+  private:
+    static CTextureGL* tex;
     static SDL_Window* mainWindow;
     static void swapBuffers();
 

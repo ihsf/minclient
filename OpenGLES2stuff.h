@@ -1,16 +1,12 @@
 #ifndef _OPENGLES2STUFF_H
 #define _OPENGLES2STUFF_H
 
-// TODO: Remove Gear VR stuff for release
-// TODO: Remove Gear VR stuff for release
-// TODO: Remove Gear VR stuff for release
-
 // loadShader() and createProgram() from Google Android NDK
 // license: Apache 2.0, https://developer.android.com/license.html
 #define GL_GLEXT_PROTOTYPES
 
 #ifdef _WIN32
-	#include <windows.h>
+  #include <windows.h>
 #endif
 
 #ifdef ANDROID
@@ -19,7 +15,6 @@
   #include <EGL/egl.h>
   #include <EGL/eglext.h>
   #include <android/log.h>
-  typedef void * (*PFN_GVR_FrontBuffer) (EGLSurface surface);
 #else
   #include <GL/glew.h>
 #ifdef __APPLE__
@@ -63,9 +58,9 @@ static const char gFragmentShader[] =
     "}";
 
 class OpenGLES2stuff{
-	public:
-		OpenGLES2stuff();
-		~OpenGLES2stuff();
+  public:
+    OpenGLES2stuff();
+    ~OpenGLES2stuff();
 
     static void init();
     static unsigned int programID;
@@ -74,20 +69,9 @@ class OpenGLES2stuff{
     static int uMatrixLocation;
     static int uTextureUnitLocation;
 
-    static bool setFrontBuffer();
-    static void swapBuffer();
-
   private:
     static GLuint loadShader(GLenum shaderType, const char* pSource);  
     static GLuint createProgram(const char* pVertexSource, const char* pFragmentSource);
-
-#ifdef ANDROID
-    // Galaxy Note 4
-    static PFN_GVR_FrontBuffer egl_GVR_FrontBuffer;
-    static EGLDisplay	display;
-    static EGLSurface windowSurface;
-    //static void* egl_GVR_FrontBuffer;
-#endif
 
     static vector<GLuint> programIDs;
     static vector<GLuint> shaderIDs;

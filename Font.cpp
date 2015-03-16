@@ -1,5 +1,7 @@
 #include "Font.h"
 
+// This code and the font texture is based on one of the tutorials of NeHe productions (Jeff Molofee). http://nehe.gamedev.net/.
+
 CTextureGL* minclient::Font::tex = NULL;
 SDL_Window* minclient::Font::mainWindow = NULL;
 int minclient::Font::numLinesPrinted = 0;
@@ -6577,19 +6579,19 @@ minclient::Font::~Font(){
 
 void minclient::Font::init(SDL_Window* mainWindow_){
   mainWindow = mainWindow_;
-	tex = new CTextureGL(texelData, 256, 256, 3);
+  tex = new CTextureGL(texelData, 256, 256, 3);
 
   for(int i = 0; i < 256; i++){
-	  lookUpTableLetters[i][0] = float(i%16) / 16.0f;			// X position of current character
-	  lookUpTableLetters[i][1] = float(i/16) / 16.0f;			// Y position of current character
+    lookUpTableLetters[i][0] = float(i%16) / 16.0f;			// X position of current character
+    lookUpTableLetters[i][1] = float(i/16) / 16.0f;			// Y position of current character
   }
 }
 
 void minclient::Font::glPrint(GLint x, GLint y, const char* const string, bool swapBuffer){
-	if(!string){
-		cout << "glPrint: empty string!" << endl;
-		return;
-	}
+  if(!string){
+    cout << "glPrint: empty string!" << endl;
+    return;
+  }
 
   if(y == AUTO){
     numLinesPrinted++;
@@ -6622,7 +6624,7 @@ void minclient::Font::glPrint(GLint x, GLint y, const char* const string, bool s
 }
 
 void minclient::Font::swapBuffers(){
-	SDL_GL_SwapWindow(mainWindow); 
+  SDL_GL_SwapWindow(mainWindow); 
 }
 
 void minclient::Font::resetNumLinesPrinted(){
@@ -6631,14 +6633,14 @@ void minclient::Font::resetNumLinesPrinted(){
 
 void minclient::Font::glPrintSavedLines(){
 #ifndef ANDROID
-	glEnable(GL_BLEND);    // blending takes quite some time in android, so disable it there. 
+  glEnable(GL_BLEND);    // blending takes quite some time in android, so disable it there. 
 #endif
 
-	glBindTexture(GL_TEXTURE_2D, tex->getID());						
+  glBindTexture(GL_TEXTURE_2D, tex->getID());						
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);									     
-	glPushMatrix();													             
-	glLoadIdentity();												         
+  glMatrixMode(GL_PROJECTION);									     
+  glPushMatrix();													             
+  glLoadIdentity();												         
 #endif
 
   float orthoMatrix[16];
@@ -6648,7 +6650,7 @@ void minclient::Font::glPrintSavedLines(){
 #ifndef ANDROID
   glMultMatrixf(orthoMatrix);  
   glMatrixMode(GL_MODELVIEW);										        
-	glPushMatrix();		  										       
+  glPushMatrix();		  										       
   glLoadIdentity();		
 #endif
 
@@ -6657,10 +6659,10 @@ void minclient::Font::glPrintSavedLines(){
   const int fontSizeMinusFontSizeDiv4 = fontSize - fontSizeDiv4;    
 
   for(int i = 0; i < savedLinesNumber; i++){
-	  float offsetX = 0.0f;
+    float offsetX = 0.0f;
 
-	  float cx;											
-	  float cy;										
+    float cx;											
+    float cy;										
     
     const size_t strlength = strlen(savedLines[i]);
 
@@ -6672,8 +6674,8 @@ void minclient::Font::glPrintSavedLines(){
 
       // skip empty spaces
       if(letter != 0){
-		    cx = lookUpTableLetters[letter][0];           
-		    cy = lookUpTableLetters[letter][1];		
+        cx = lookUpTableLetters[letter][0];           
+        cy = lookUpTableLetters[letter][1];		
 
         savedVertices[savedLetters][0] = 0 + offsetX + savedLinesCoordinates[i].x;
         savedVertices[savedLetters][1] = 0 + savedLinesCoordinates[i].y;
@@ -6710,15 +6712,15 @@ void minclient::Font::glPrintSavedLines(){
 
   if(savedLetters > 0){
 #ifndef ANDROID
-	  glEnableClientState(GL_VERTEX_ARRAY);
-	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
    
-	  glVertexPointer(2, GL_FLOAT, 0,savedVertices);
-	  glTexCoordPointer(2, GL_FLOAT, 0, savedTexCoords);   
-	  glDrawArrays(GL_TRIANGLES, 0, 6 * savedLetters);  
+    glVertexPointer(2, GL_FLOAT, 0,savedVertices);
+    glTexCoordPointer(2, GL_FLOAT, 0, savedTexCoords);   
+    glDrawArrays(GL_TRIANGLES, 0, 6 * savedLetters);  
 
-	  glDisableClientState(GL_VERTEX_ARRAY);
-	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #else
   glUseProgram(OpenGLES2stuff::programID);
 
@@ -6735,19 +6737,19 @@ void minclient::Font::glPrintSavedLines(){
   glActiveTexture(GL_TEXTURE0);
   glUniform1i(OpenGLES2stuff::uTextureUnitLocation, 0);
    
-	glDrawArrays(GL_TRIANGLES,0,6 * savedLetters);  
+  glDrawArrays(GL_TRIANGLES,0,6 * savedLetters);  
 #endif
   }
 
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);									       
-	glPopMatrix();													     
-	glMatrixMode(GL_MODELVIEW);										     
-	glPopMatrix();									
+  glMatrixMode(GL_PROJECTION);									       
+  glPopMatrix();													     
+  glMatrixMode(GL_MODELVIEW);										     
+  glPopMatrix();									
 #endif
 
 #ifndef ANDROID
-	glDisable(GL_BLEND);	
+  glDisable(GL_BLEND);	
 #endif
 }
 

@@ -43,41 +43,31 @@ void OpenGLstuff::init(){
   int numBytesPerPixel = 4;
 
   if(!Engine::rectMode){
-    if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
-	    frameBufferPointer = new unsigned char[Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel];
-	    memset(frameBufferPointer, 0, Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel);
-    } else {
 #ifdef ANDROID
-	      frameBufferPointer = new unsigned char[(Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel) / 8];
-	      memset(frameBufferPointer, 0, (Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel) / 8);
+    frameBufferPointer = new unsigned char[(Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel) / 8];
+    memset(frameBufferPointer, 0, (Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel) / 8);
 #else
-	      frameBufferPointer = new unsigned char[Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel];
-	      memset(frameBufferPointer, 0, Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel);
+    frameBufferPointer = new unsigned char[Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel];
+    memset(frameBufferPointer, 0, Engine::screenWidthRT * Engine::screenHeightRT * numBytesPerPixel);
 #endif
-    }
   } else {
     for(int i = 0; i < Engine::numServers; i++){
-      if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
-        frameBufferPointerRect[i] = new unsigned char[Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel];
-        memset(frameBufferPointerRect[i], 0, Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel);
-      } else {
 #ifdef ANDROID
-        // android uses ETC1 nativley so we can assign 1/8 of the frame buffer
-        frameBufferPointerRect[i] = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8];
-        memset(frameBufferPointerRect[i], 0, (Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8);
+      // android uses ETC1 nativley so we can assign 1/8 of the frame buffer
+      frameBufferPointerRect[i] = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8];
+      memset(frameBufferPointerRect[i], 0, (Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8);
 #else
-        // everyone else decompresses into RGBA and needs the full frame buffer
-        frameBufferPointerRect[i] = new unsigned char[Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel];
-        memset(frameBufferPointerRect[i], 0, Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel);
+      // everyone else decompresses into RGBA and needs the full frame buffer
+      frameBufferPointerRect[i] = new unsigned char[Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel];
+      memset(frameBufferPointerRect[i], 0, Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel);
 
-        rectCopyBuffers[i] = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8];
-        memset(rectCopyBuffers[i], 0, (Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8);
+      rectCopyBuffers[i] = new unsigned char[(Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8];
+      memset(rectCopyBuffers[i], 0, (Engine::rectSizeX[i] * Engine::rectSizeY[i] * numBytesPerPixel) / 8);
 #endif
-      }
     }
   }
 
-	glViewport(0, 0, Engine::screenWidthGL, Engine::screenHeightGL);
+  glViewport(0, 0, Engine::screenWidthGL, Engine::screenHeightGL);
 
 #ifndef ANDROID
   glMatrixMode(GL_PROJECTION);
@@ -95,16 +85,16 @@ void OpenGLstuff::init(){
   glLoadIdentity();
 #endif
   glDisable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
+  glEnable(GL_TEXTURE_2D);
 
-	generateFramebufferTexture();
+  generateFramebufferTexture();
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
   swapBuffers();
   glClear(GL_COLOR_BUFFER_BIT);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
 }
 
 void OpenGLstuff::generateFramebufferTexture(){
@@ -116,94 +106,58 @@ void OpenGLstuff::generateFramebufferTexture(){
 }
 
 void OpenGLstuff::generateFramebufferTextureNoRect(){
-	glGenTextures(1, &framebufferTexID);
+  glGenTextures(1, &framebufferTexID);
 
-	glBindTexture(GL_TEXTURE_2D, framebufferTexID);
+  glBindTexture(GL_TEXTURE_2D, framebufferTexID);
    
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-  } else {
 #ifdef ANDROID
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, NULL);  
+  glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, NULL);  
 #else
-    if(!Engine::serverUseDXT1){
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    } else {
-      glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, NULL);  
-    }
+  // assuming texture data has been manually decompressed from ETC1 into RGBA
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 #endif
-  }
-	
-	glBindTexture(GL_TEXTURE_2D, 0);
+  
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void OpenGLstuff::generateFramebufferTextureRect(){
   for(int i = 0; i < Engine::numServers; i++){
-	  glGenTextures(1, &framebufferTexIDRect[i]);
+    glGenTextures(1, &framebufferTexIDRect[i]);
 
-	  glBindTexture(GL_TEXTURE_2D, framebufferTexIDRect[i]);
+    glBindTexture(GL_TEXTURE_2D, framebufferTexIDRect[i]);
 
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    if(!Engine::serverUseETC1 && !Engine::serverUseDXT1){
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::rectSizeX[i], Engine::rectSizeY[i], 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    } else {
 #ifdef ANDROID
-      glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::rectSizeX[i], Engine::rectSizeY[i], 0,	(Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2, NULL);  
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::rectSizeX[i], Engine::rectSizeY[i], 0,	(Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2, NULL);  
 #else
-      if(!Engine::serverUseDXT1){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::rectSizeX[i], Engine::rectSizeY[i], 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-      } else {
-        glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::rectSizeX[i], Engine::rectSizeY[i], 0,	(Engine::rectSizeX[i] * Engine::rectSizeY[i]) / 2, NULL);  
-      }
+    // assuming texture data has been manually decompressed from ETC1 into RGBA
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::rectSizeX[i], Engine::rectSizeY[i], 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 #endif
-    }
   }
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void OpenGLstuff::render(){
   glClear(GL_COLOR_BUFFER_BIT);
-	glEnable(GL_TEXTURE_2D);
+  glEnable(GL_TEXTURE_2D);
 
-  {
-  CProfileSample render1("drawFrameBuffer");
   if(!Engine::rectMode){
     drawFrameBufferNoRect();
   } else {
     drawFrameBufferRect();
   }            
-  }
 
-  {
-  CProfileSample render2("drawFPS");
   drawFPS();
-  }
-
-  {
-  CProfileSample render3("drawProfilerOutput");
-  drawProfilerOutput();
-  }
-
-  {
-  CProfileSample render4("drawHUD");
   drawHUD();
-  }
 
-  {
-  CProfileSample render5("glPrintSavedLines");
   minclient::Font::glPrintSavedLines();
-  }
-
-  {
-  CProfileSample render6("resetSavedLines");
   minclient::Font::resetSavedLines();
-  }
 }
 
 // Optimize: Could preallocate vertices[MAX_SERVERS] and render all things while the client state is enabled
@@ -235,8 +189,8 @@ void OpenGLstuff::drawFrameBufferRect(){
   const float aspectRatio = (float)Engine::screenWidthRT / (float)Engine::screenHeightRT;
 
   for(int i = 0; i < Engine::numServers; i++){
-	  // draw ray traced rectangle 
-	  glBindTexture(GL_TEXTURE_2D, framebufferTexIDRect[i]);
+    // draw ray traced rectangle 
+    glBindTexture(GL_TEXTURE_2D, framebufferTexIDRect[i]);
     
     int startX = Engine::rectLeftServer[i];
     int startY = Engine::rectBottomServer[i];
@@ -330,12 +284,10 @@ void OpenGLstuff::drawFrameBufferRect(){
 
 void OpenGLstuff::drawFrameBufferNoRect(){
 #ifndef ANDROID
-	glMatrixMode(GL_PROJECTION);									       
-	glPushMatrix();													              
-	glLoadIdentity();												              
-#else
-  //glEnable(GL_WRITEONLY_RENDERING_QCOM);
-#endif  
+  glMatrixMode(GL_PROJECTION);									       
+  glPushMatrix();													              
+  glLoadIdentity();												               
+#endif
   
   float orthoMatrix[16];
   memset(orthoMatrix, 0, sizeof(orthoMatrix));
@@ -351,8 +303,8 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   int horizontalOffset = (Engine::screenWidthGL  - Engine::screenWidthRT)  / 2;
   int verticalOffset   = (Engine::screenHeightGL - Engine::screenHeightRT) / 2;
 
-	// draw ray traced rectangle 
-	glBindTexture(GL_TEXTURE_2D, framebufferTexID);
+  // draw ray traced rectangle 
+  glBindTexture(GL_TEXTURE_2D, framebufferTexID);
 #ifdef ANDROID
   if(!Engine::serverUseETC1){
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_RGBA, GL_UNSIGNED_BYTE, frameBufferPointer);
@@ -360,18 +312,14 @@ void OpenGLstuff::drawFrameBufferNoRect(){
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);  
   }
 #else
-  if(!Engine::serverUseDXT1){
-    // OPTIMIZE: store copy buffers somewhere else
-    unsigned char* copyBuffer = new unsigned char[(Engine::screenWidthRT * Engine::screenHeightRT * 4) / 8];
-    memcpy(copyBuffer, frameBufferPointer, (Engine::screenWidthRT * Engine::screenHeightRT * 4) / 8);
+  // Manual decompression of ETC1 into RGBA disabled.    
+  // OPTIMIZE: store copy buffers somewhere else
+  // unsigned char* copyBuffer = new unsigned char[(Engine::screenWidthRT * Engine::screenHeightRT * 4) / 8];
+  // memcpy(copyBuffer, frameBufferPointer, (Engine::screenWidthRT * Engine::screenHeightRT * 4) / 8);
 
-    Etc1::convertETC1toRGBA(copyBuffer, frameBufferPointer, Engine::screenWidthRT, Engine::screenHeightRT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_BGRA, GL_UNSIGNED_BYTE, frameBufferPointer);  
-    delete[] copyBuffer;
-  } else {
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, COMPRESSED_RGBA_S3TC_DXT1_EXT, Engine::screenWidthRT, Engine::screenHeightRT, 0,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer); 
-    //glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Engine::screenWidthRT, Engine::screenHeightRT, COMPRESSED_RGBA_S3TC_DXT1_EXT,	(Engine::screenWidthRT * Engine::screenHeightRT) / 2, frameBufferPointer);
-  }
+  // Etc1::convertETC1toRGBA(copyBuffer, frameBufferPointer, Engine::screenWidthRT, Engine::screenHeightRT);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine::screenWidthRT, Engine::screenHeightRT, 0, GL_BGRA, GL_UNSIGNED_BYTE, frameBufferPointer);  
+  //delete[] copyBuffer;
 #endif
 
   GLfloat vertices[]  = {0.0f + horizontalOffset,                  (float)Engine::screenHeightRT + verticalOffset,  
@@ -442,9 +390,7 @@ void OpenGLstuff::drawFrameBufferNoRect(){
   glActiveTexture(GL_TEXTURE0);
   glUniform1i(OpenGLES2stuff::uTextureUnitLocation, 0);
    
-	glDrawArrays(GL_TRIANGLES,0,6); 
-
-  //glDisable(GL_WRITEONLY_RENDERING_QCOM);
+  glDrawArrays(GL_TRIANGLES,0,6); 
 #endif
 
 #ifndef ANDROID
@@ -454,16 +400,6 @@ void OpenGLstuff::drawFrameBufferNoRect(){
 #endif
 }
 
-void OpenGLstuff::drawProfilerOutput(){
-  minclient::Font::resetNumLinesPrinted();
-
-  for(int i = 0; i < (int)Engine::profilerOutput.size(); i++){
-    minclient::Font::glPrint(10, minclient::Font::AUTO, Engine::profilerOutput[i], false);
-    delete [] Engine::profilerOutput[i];
-  }
-
-  Engine::profilerOutput.clear();
-}
 
 void OpenGLstuff::drawHUD(){
   Engine::buttonLeftCenter.x = 150.0f;
@@ -489,20 +425,12 @@ void OpenGLstuff::drawHUD(){
 }
 
 void OpenGLstuff::swapBuffers(){
-#ifdef ANDROID
-  if(!Engine::useGVRFrontBuffer){
-    SDL_GL_SwapWindow(mainWindow); 
-  } else {
-    OpenGLES2stuff::swapBuffer();
-  }
-#else
   SDL_GL_SwapWindow(mainWindow);
-#endif
 }
 
 void OpenGLstuff::drawFPS(){
-	const int width = Engine::screenWidthGL;
-	int height = Engine::screenHeightGL;
+  const int width = Engine::screenWidthGL;
+  int height = Engine::screenHeightGL;
 
   int widthToPrint = width - width/10;
   if(width < 512)
@@ -519,26 +447,26 @@ void OpenGLstuff::drawFPS(){
 }
 
 bool OpenGLstuff::isETCSupported(){
-	int count = 0;
-	int GLEW_OES_compressed_ETC1_RGB8_texture = 0;
+  int count = 0;
+  int GLEW_OES_compressed_ETC1_RGB8_texture = 0;
 
-	glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &count);
+  glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &count);
 
-	if(count > 0){
+  if(count > 0){
     GLint* formats = (GLint*)calloc(count, sizeof(GLint));
-		glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, formats);
+    glGetIntegerv(GL_COMPRESSED_TEXTURE_FORMATS, formats);
 
     int index;
     for(index = 0; index < count; index++){
-			switch(formats[index]){
-				case GL_ETC1_RGB8_OES:
-					GLEW_OES_compressed_ETC1_RGB8_texture = 1;
-					break;
-			}
-		}
+      switch(formats[index]){
+        case GL_ETC1_RGB8_OES:
+          GLEW_OES_compressed_ETC1_RGB8_texture = 1;
+          break;
+      }
+    }
 
-		free(formats);
-	}
+    free(formats);
+  }
 
   if(GLEW_OES_compressed_ETC1_RGB8_texture)
     return true;
@@ -612,29 +540,15 @@ void OpenGLstuff::printCompressedTextureAvailability(){
 
   minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
 
-  if (Engine::useGVRFrontBuffer){
-    if (isFrontBufferSupported()){
-      strcpy(output, "FrontBuffer EXT supported.");
-    }
-    else {
-      strcpy(output, "No FrontBuffer EXT support.");
-    }
-
-    minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
-
-    bool frontBufferCreated = OpenGLES2stuff::setFrontBuffer();
-    if (frontBufferCreated){
-      strcpy(output, "egl_GVR_FB adr succeeded.");
-    }
-    else {
-      strcpy(output, "egl_GVR_FB adr failed.");
-    }
-
+  if (isFrontBufferSupported()){
+    strcpy(output, "FrontBuffer EXT supported.");
     minclient::Font::glPrint(10, minclient::Font::AUTO, output, true);
   }
 
   SDL_Delay(1000);
 
+  // here we check for ETC1 support. some mobile devices support it, but don't list it.
+  // so if we don't find it, we will just try to continue.
   if(Engine::serverUseETC1){
     if(!isETCSupported()){
       minclient::Font::glPrint(10, minclient::Font::AUTO, "Trying to use ETC1, but not supported in hardware.", true);

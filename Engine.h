@@ -28,16 +28,16 @@
 using namespace std;
 
 #ifdef _MSC_VER
-	#pragma warning(disable: 4244) // conversion from 'const double' to 'float', possible loss of data
-	#pragma warning(disable: 4996) // '*' was declared deprecated
+  #pragma warning(disable: 4244) // conversion from 'const double' to 'float', possible loss of data
+  #pragma warning(disable: 4996) // '*' was declared deprecated
 #endif
 
 #ifdef __INTEL_COMPILER
   #pragma warning(disable: 3291) // invalid narrowing conversion from "int" to "float"
-	#pragma warning(disable: 1786) // function strcpy was declared deprecated ...
-	#pragma warning(disable: 279)
-	#pragma warning(disable: 1478) //  function "alutLoadWAVFile" was declared "deprecated"
-	#pragma warning(disable: 589)  //  transfer of control bypasses initialization of
+  #pragma warning(disable: 1786) // function strcpy was declared deprecated ...
+  #pragma warning(disable: 279)
+  #pragma warning(disable: 1478) //  function "alutLoadWAVFile" was declared "deprecated"
+  #pragma warning(disable: 589)  //  transfer of control bypasses initialization of
 #endif
 
 #ifdef _WIN32
@@ -49,8 +49,8 @@ using namespace std;
 #endif
 
 #ifndef PI_DEFINED
-	#define PI_DEFINED
-	const double PI  = 3.1415926535897932384626433832795;
+  #define PI_DEFINED
+  const double PI  = 3.1415926535897932384626433832795;
 #endif
 
 #ifndef M_180_PI
@@ -85,18 +85,18 @@ const char * const MINCLIENT_VERSION = "1.00";
 #define NETWORK_ON true
 
 class Engine {
-	public:
-		Engine(){};
-		~Engine(){};
+  public:
+    Engine(){};
+    ~Engine(){};
     
-		static void init();		
-		static void calculateFrameRate();
-			
-		static float getFrameInterval(){ return frameInterval; }
+    static void init();		
+    static void calculateFrameRate();
+      
+    static float getFrameInterval(){ return frameInterval; }
 
-		// Networking stuff
-		static TCPsocket socketDescriptor[MAX_SERVERS];
-		static IPaddress serverIP[MAX_SERVERS];
+    // Networking stuff
+    static TCPsocket socketDescriptor[MAX_SERVERS];
+    static IPaddress serverIP[MAX_SERVERS];
 
     static int rectLeftServer[MAX_SERVERS];
     static int rectTopServer[MAX_SERVERS];
@@ -107,53 +107,50 @@ class Engine {
 
     static bool rectMode;
 
-		// variables
-		static int screenWidthRT; 
-		static int screenHeightRT;
-		static int screenWidthGL; 
-		static int screenHeightGL; 
-		static int serverFrameBuffers;
+    // variables
+    static int screenWidthRT; 
+    static int screenHeightRT;
+    static int screenWidthGL; 
+    static int screenHeightGL; 
+    static int serverFrameBuffers;
 
-		//static int RENDERTILE_SIZE;
+    //static int RENDERTILE_SIZE;
 
     static bool upscale;
 
-		// keys & mouse
-		static bool upKey;
-		static bool downKey; 
-		static bool leftKey; 
-		static bool rightKey;
-		//static bool leftButton;
-		//static bool rightButton;
-		static bool jumpKey;
+    // keys & mouse
+    static bool upKey;
+    static bool downKey; 
+    static bool leftKey; 
+    static bool rightKey;
+    //static bool leftButton;
+    //static bool rightButton;
+    static bool jumpKey;
     static bool crouchKey;
 
-		static bool nextFrameStartProfiler;
-		static bool nextFrameStopProfiler;
-
     static CVector2 relativeMouseMotion;
-	
-		static bool forceScreenResolution;
-		static bool done;
+  
+    static bool forceScreenResolution;
+    static bool done;
 
     static bool fullscreen;
 
     static int fontSize;
 
-		static float angle;
+    static float angle;
 
-		static float currentTime;
-		static float currentTimeLastFrame;
-		static float timeWhenMapWasLoaded;
-		static float sensitivity;
-		static float frameTime;
-		static float framesPerSecond;		
+    static float currentTime;
+    static float currentTimeLastFrame;
+    static float timeWhenMapWasLoaded;
+    static float sensitivity;
+    static float frameTime;
+    static float framesPerSecond;		
 
-		static char* startMap;
+    static char* startMap;
 
-		static char* serverName[MAX_SERVERS];
-		static int serverPort[MAX_SERVERS];
-		static int numServers;
+    static char* serverName[MAX_SERVERS];
+    static int serverPort[MAX_SERVERS];
+    static int numServers;
 
     static void increaseNumFramesRendered(){ numFramesRendered++; }
 
@@ -165,9 +162,6 @@ class Engine {
 
     static void calculateOrthoMatrix(float left, float right, float bottom, float top, float near_, float far_, float result[16]);
 
-    static vector<char*> profilerOutput;
-
-    static bool serverUseDXT1;
     static bool serverUseETC1;
 
     static CVector2 buttonLeftCenter;
@@ -180,13 +174,11 @@ class Engine {
 
     static char debugMessage[64];
     
-    static bool useGVRFrontBuffer;
-
     static int numAccelerometerHits;
 
-	private:		
-		static float lastTime;				// This will hold the time from the last frame		
-		static void parseConfigFile();
+  private:		
+    static float lastTime;				// This will hold the time from the last frame		
+    static void parseConfigFile();
 
     static void updateGlobalSinus();
 };

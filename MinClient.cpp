@@ -17,88 +17,35 @@ int main(int argc, char *argv[]){
 
   NetworkStuff networkStuff(&camera, &openglstuff);
 
-	CProfileLogHandler profileLogHandler;
-	CProfileSample::outputHandler= &profileLogHandler;
-
   // main game loop
   while(!Engine::done)  {
-		doGameLoop(&sdlstuff, &camera, &openglstuff, &networkStuff);
-	}
-
-#ifdef ANDROID
-  if(Engine::useGVRFrontBuffer){
-    glDisable(GL_WRITEONLY_RENDERING_QCOM);
+    doGameLoop(&sdlstuff, &camera, &openglstuff, &networkStuff);
   }
-#endif
 
-	sdlstuff.closeSDL_Net();
+  sdlstuff.closeSDL_Net();
 
   sdlstuff.ungrabKeyAndMouse();
 
-	cout << "MinClient: Leaving now..." << endl;  
+  cout << "MinClient: Leaving now..." << endl;  
 
-  // without the exit here it hangs in android
+  // FIXME: without the exit here it hangs. need to find out what causes this.
   exit(1);
 
   return 0;
 }
 
 void doGameLoop(SDLstuff* sdlstuff, Camera* camera, OpenGLstuff* openglstuff, NetworkStuff* networkStuff){	
-  {  
-    CProfileSample mainLoop("GameLoop"); 
+  sdlstuff->checkEvents();	
+  Engine::calculateFrameRate();
+  camera->update();
 
-    {
-		  CProfileSample sdl("SDL CheckEvents");
-	    // check for inputs (e.g. keyboard)
-	    sdlstuff->checkEvents();	
-    }
-
-    Engine::calculateFrameRate();
-
-    {
-		  CProfileSample cam("Camera Updates");
-      camera->update();
-    }
-
-    {
 #ifdef NETWORK_ON
-		  CProfileSample sendMessage("SendMessageToRenderServers");
-      networkStuff->sendMessageToRenderServers();  
-#endif
-    }
-
-	  // only display frame after you got one
-    int framesToWait = 0;// Engine::numServers * Engine::serverFrameBuffers;
-
-	  if(Engine::numFramesRendered >= framesToWait){
-#ifdef NETWORK_ON
-      {
-		    CProfileSample receiveMessage("ReceiveMessageFromRenderServer");
-        networkStuff->receiveMessageFromRenderServer();
-      }
+  networkStuff->sendMessageToRenderServers();  
+  networkStuff->receiveMessageFromRenderServer();
 #endif
 
-      {
-		    CProfileSample render("openglstuff render()");
-		    openglstuff->render();
-      }
+  openglstuff->render();
+  openglstuff->swapBuffers();      
 
-      {
-		    CProfileSample swap("swapBuffers()");
-		    openglstuff->swapBuffers();
-      }
-	  }
-
-	  Engine::increaseNumFramesRendered();
-  }
-
-	CProfileSample::Output();
-
-	if(Engine::nextFrameStartProfiler){
-		CProfileSample::bProfilerIsRunning = true;
-		Engine::nextFrameStartProfiler = false;
-	} else if(Engine::nextFrameStopProfiler){
-		CProfileSample::bProfilerIsRunning = false;
-		Engine::nextFrameStartProfiler = false;
-	}
+  Engine::increaseNumFramesRendered();
 }

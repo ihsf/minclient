@@ -3,7 +3,7 @@
 // class based on www.gametutorials.com - see license.txt
 
 Camera::Camera(){
-	init();
+  init();
 }
 
 void Camera::init(){
@@ -19,12 +19,12 @@ void Camera::rotateView(float angle, float x, float y, float z){
   CVector3 direction = getDirectionNormalized();
 
   // mouse/touch look sensitivity
-	angle *= Engine::sensitivity;
-	
+  angle *= Engine::sensitivity;
+
   const float cosTheta = cosf(angle);
   const float sinTheta = sinf(angle);
 
-	CVector3 newView;
+  CVector3 newView;
 
   newView.x  = (cosTheta + (1 - cosTheta) * x * x)       * direction.x;
   newView.x += ((1 - cosTheta) * x * y - z * sinTheta)   * direction.y;
@@ -42,7 +42,7 @@ void Camera::rotateView(float angle, float x, float y, float z){
 }
 
 void Camera::strafeCamera(float speed){   
-	speed *= -1.0f; // invert
+  speed *= -1.0f; // invert
 
   position.x += strafe.x * speed;
   position.z += strafe.z * speed;
@@ -62,8 +62,8 @@ void Camera::applyKeyboardMovements(){
   const float speedUp = 30.0f;
   float speed = speedUp * Engine::frameInterval;
 
-	if(speed < 0.0f)
-		speed = -speed;
+  if(speed < 0.0f)
+    speed = -speed;
 
 //#ifdef ANDROID
   if(Engine::buttonPressed != CVector2(-666.6f, -666.6f)){
@@ -112,10 +112,10 @@ void Camera::applyKeyboardMovements(){
       angleY = (float)( (-mouseMotion.x)  / 3500.0f);       
       angleZ = (float)( (-mouseMotion.y)  / 3500.0f);     
 
-	    CVector3 viewMinusPosition = view - position;
+      CVector3 viewMinusPosition = view - position;
 
       float dotProduct = upVector.dotProduct(&viewMinusPosition);
-    	
+
       currentRotX -= angleZ; 
 
       if(currentRotX > 1.0f)
@@ -123,23 +123,23 @@ void Camera::applyKeyboardMovements(){
       else if(currentRotX < -1.0f)
         currentRotX = -1.0f;
 
-	    if(dotProduct > 0.95f){					
-		    viewMinusPosition.x += 0.05f;
-		    viewMinusPosition.y -= 0.1f;
-		    viewMinusPosition.normalize();
-		    dotProduct = upVector.dotProduct(&viewMinusPosition);
-	    }
+      if(dotProduct > 0.95f){					
+        viewMinusPosition.x += 0.05f;
+        viewMinusPosition.y -= 0.1f;
+        viewMinusPosition.normalize();
+        dotProduct = upVector.dotProduct(&viewMinusPosition);
+      }
 
-	    if(dotProduct < -0.95f){
-		    viewMinusPosition.x += 0.05f;
-		    viewMinusPosition.y += 0.1f;
-		    viewMinusPosition.normalize();
-		    dotProduct = upVector.dotProduct(&viewMinusPosition);
-	    }
+      if(dotProduct < -0.95f){
+        viewMinusPosition.x += 0.05f;
+        viewMinusPosition.y += 0.1f;
+        viewMinusPosition.normalize();
+        dotProduct = upVector.dotProduct(&viewMinusPosition);
+      }
 
       CVector3 axis;
       axis = axis.cross(viewMinusPosition, upVector);
-	    axis.normalize();
+      axis.normalize();
 
       rotateView(angleZ, axis.x, axis.y, axis.z);
       rotateView(angleY, 0, 1, 0);
@@ -147,30 +147,30 @@ void Camera::applyKeyboardMovements(){
   }
 //#endif
  
-	if(Engine::crouchKey){
-		position.y -= speed;
-		view.y -= speed;
-	}
-	if(Engine::jumpKey){
-		position.y += speed;
-		view.y += speed;
-	}
+  if(Engine::crouchKey){
+    position.y -= speed;
+    view.y -= speed;
+  }
+  if(Engine::jumpKey){
+    position.y += speed;
+    view.y += speed;
+  }
 
-	if(Engine::upKey) {             
-	  moveCamera(speed);              
-	}
+  if(Engine::upKey){
+    moveCamera(speed);
+  }
 
-	if(Engine::downKey) {           
-	  moveCamera(-speed);             
-	}
+  if(Engine::downKey){
+    moveCamera(-speed);             
+  }
 
-	if(Engine::leftKey) {   
+  if(Engine::leftKey){
     strafeCamera(-speed);
-	}
+  }
 
-	if(Engine::rightKey) {   
-		strafeCamera(speed);
-	}   
+  if(Engine::rightKey){
+  strafeCamera(speed);
+  }
 }
 
 void Camera::update() {
@@ -181,11 +181,11 @@ void Camera::update() {
 }
 
 CVector3 Camera::getDirectionNormalized(){
-	CVector3 dir = view - position;
+  CVector3 dir = view - position;
   if(dir.magnitude() < 0.01f) {
     cerr << "Camera direction is too small..." << endl;
   }
-	dir.normalize();
+  dir.normalize();
 
-	return dir;
+  return dir;
 }
