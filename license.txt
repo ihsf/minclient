@@ -1,16 +1,20 @@
 Min-Project
 ===========
-Our code is released under the ... license.
-
-
-Intel Embree
-============
-http://embree.github.io/
-Embree is released as Open Source under the Apache 2.0 license. (http://www.apache.org/licenses/LICENSE-2.0)
+Our code is released under the Apache 2.0 license (see LICENSE-2_0.txt). Exceptions of this are marked at the beginning of the source and/or header files. 
 
 libSDL2, libSDL_Net 2
 =====================
 See text files in \SDL folder.
+
+Font.cpp / Font.h
+=================
+This code is based on one of the tutorials of NeHe productions (Jeff Molofee). http://nehe.gamedev.net/.
+
+LZ4
+===
+LZ4 - Fast LZ compression algorithm
+, Copyright (C) 2011-2014, Yann Collet.
+   BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
 
 www.gametutorials.com
 =====================
