@@ -84,6 +84,12 @@ const char * const MINCLIENT_VERSION = "1.00";
 
 #define NETWORK_ON true
 
+enum class HeadTrackingMethods {
+  OFF = 1,
+  ZEISS_VR_ONE = 2,
+  GOOGLE_CARDBOARD = 3,
+};
+
 class Engine {
   public:
     Engine(){};
@@ -175,6 +181,8 @@ class Engine {
     static char debugMessage[64];
     
     static int numAccelerometerHits;
+
+    static HeadTrackingMethods headTrackingMethod;
 
   private:		
     static float lastTime;				// This will hold the time from the last frame		

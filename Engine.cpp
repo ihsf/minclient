@@ -104,6 +104,8 @@ CVector2 Engine::buttonPressed;
 
 char Engine::debugMessage[64];
 
+HeadTrackingMethods Engine::headTrackingMethod = HeadTrackingMethods::OFF;
+
 void Engine::init(){
   for(int i = 0; i < MAX_SERVERS; i++){
     serverName[i] = NULL;

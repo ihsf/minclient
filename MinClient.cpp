@@ -17,6 +17,10 @@ int main(int argc, char *argv[]){
 
   NetworkStuff networkStuff(&camera, &openglstuff);
 
+  HeadTracking headTracking;
+  double x, y, z, w;
+  headTracking.getHeadOrientationQuaternion(&x, &y, &z, &w);
+
   // main game loop
   while(!Engine::done)  {
     doGameLoop(&sdlstuff, &camera, &openglstuff, &networkStuff);

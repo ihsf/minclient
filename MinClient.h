@@ -18,6 +18,7 @@
 #include "NetworkStuff.h"
 #include "Font.h"
 #include "OpenGLES2stuff.h"
+#include "HeadTracking.h"
 
 using namespace std;
 
