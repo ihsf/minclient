@@ -200,7 +200,7 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
     // ToDo: receiving might be parallelized; allows parallel uploading of the texture data
     SDLNet_TCP_Recv(Engine::socketDescriptor[i], &size, 4);
 
-    auto cnt = size;
+    auto cnt = abs(size);
     auto ptr = lz4Buf;
 
     do {
@@ -210,9 +210,17 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
     } while (cnt > 0);
 
 #ifdef ANDROID
-    LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
+  if(size < 0){
+      memcpy(openglstuff->frameBufferPointerRect[i], lz4Buf, -size);
+  } else {
+      LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
+  }
 #else 
-    LZ4_decompress_safe(lz4Buf, (char*)openglstuff->rectCopyBuffers[i], size, numBytesToReceiveTemp);
+    if(size < 0){
+      memcpy(openglstuff->rectCopyBuffers[i], lz4Buf, -size);
+    } else {
+      LZ4_decompress_safe(lz4Buf, (char*)openglstuff->rectCopyBuffers[i], size, numBytesToReceiveTemp);
+    }
 #endif
 
     glBindTexture(GL_TEXTURE_2D, openglstuff->framebufferTexIDRect[i]);
