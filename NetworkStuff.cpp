@@ -203,25 +203,30 @@ void NetworkStuff::receiveMessageFromRenderServerETC1Rect(){
     auto cnt = abs(size);
     auto ptr = lz4Buf;
 
+    if(size < 0){
+#ifdef ANDROID
+      ptr = (char*)openglstuff->frameBufferPointerRect[i];
+# else
+      ptr = (char*)openglstuff->rectCopyBuffers[i];
+#endif
+    }
+
     do {
       int length = SDLNet_TCP_Recv(Engine::socketDescriptor[i], ptr, cnt);
       cnt -= length;
       ptr += length;
     } while (cnt > 0);
 
-#ifdef ANDROID
-  if(size < 0){
-      memcpy(openglstuff->frameBufferPointerRect[i], lz4Buf, -size);
-  } else {
-      LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
-  }
-#else 
     if(size < 0){
-      memcpy(openglstuff->rectCopyBuffers[i], lz4Buf, -size);
+      // do nothing
+      ;
     } else {
+#ifdef ANDROID
+      LZ4_decompress_safe(lz4Buf, (char*)openglstuff->frameBufferPointerRect[i], size, numBytesToReceiveTemp);
+#else 
       LZ4_decompress_safe(lz4Buf, (char*)openglstuff->rectCopyBuffers[i], size, numBytesToReceiveTemp);
-    }
 #endif
+  }
 
     glBindTexture(GL_TEXTURE_2D, openglstuff->framebufferTexIDRect[i]);
 #ifdef ANDROID
